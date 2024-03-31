@@ -47,9 +47,9 @@ class SaleReport(models.Model):
     zip = fields.Char('ZIP')
 
 
-    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
-        fields['state_id'] = ", partner.state_id"
-        fields['city'] = ", partner.city"
-        fields['zip'] = ", partner.zip"
-        groupby += ', partner.state_id,partner.city,partner.zip'
-        return super(SaleReport, self)._query(with_clause, fields, groupby, from_clause)
+    # def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
+    #     fields['state_id'] = ", partner.state_id"
+    #     fields['city'] = ", partner.city"
+    #     fields['zip'] = ", partner.zip"
+    #     groupby += ', partner.state_id,partner.city,partner.zip'
+    #     return super(SaleReport, self)._query(with_clause, fields, groupby, from_clause)
