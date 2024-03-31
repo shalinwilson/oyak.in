@@ -320,7 +320,8 @@ class StockPicking(models.Model):
                 """ % (self.partner_id.name, key.get('waybill'))
 
         if not success:
-            raise UserError(_('Could not Generate Delivery Slip due to Technical Error'))
+            msg = 'Could not Generate Delivery Slip due to Technical Error'+str(res_dic)
+            raise UserError(_(msg))
         self.message_post(body=html, message_type="notification", subtype_id=self.env.ref('mail.mt_comment').id,
                           subject=subject)
         self.generate_slip()
