@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_move_delivery_type" model="ir.ui.view">
+        <field name="name">stock.move.inherited</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_form"/>
+        <field name="arch" type="xml">
+<!--             <xpath expr="//field[@name='other_information']//field[@name='invoice_status']" position="after">-->
+<!--                 <field name="payment_type"/>-->
+<!--             </xpath>-->
+            <field name="origin" position="after">
+                <field name="payment_type"/>
+            </field>
+
+           <!--  <xpath expr="//div[@name='action_post']" position="after" >
+                <button name="send_picking_status" string="Product Received" groups="base.group_user" type="object"/>
+            </xpath> -->
+
+             
+        </field>
+    </record>
+
+
+
+    <record id="view_location_form_inherit_jeevika" model="ir.ui.view">
+        <field name="name">stock.location.inherited</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <field name="return_location" position="before">
+                <field name="is_pickup"/>
+
+            </field>
+
+            <xpath expr="/form/*" position="before">
+                <header>
+                    <button name="register_location" type="object" string="Sync With Delhivery" attrs="{'invisible': [('is_sync','=',True)]}"/>
+                </header>
+            </xpath>
+
+            <field name="name" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_sync', '=', True)]}</attribute>
+            </field>
+            <field name="return_location" position="after">
+                <field name="is_default" widget="boolean_toggle"/>
+            </field>
+            <!--<field name="name" position="after">-->
+            <!--<label for="code" class="oe_edit_only"/>-->
+                <!--<h3><field name="code" attrs="{'readonly': [('is_sync', '=', True)]}"/></h3>-->
+                <!--<field name="is_sync" invisible="1"/>-->
+            <!--</field>-->
+
+            <group name="additional_info" position="after">
+
+                <group>
+                        <group>
+
+                            <div class="o_address_format">
+                                <label for="street" string="Address"/>
+                                <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('is_sync', '=', True)],'required': ['|',('is_pickup','=',True),('return_location','=',True)]}"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('is_sync', '=', True)],'required': ['|',('is_pickup','=',True),('return_location','=',True)]}"/>
+                                <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('is_sync', '=', True)],'required': ['|',('is_pickup','=',True),('return_location','=',True)]}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}" attrs="{'readonly': [('is_sync', '=', True)],'required': ['|',('is_pickup','=',True),('return_location','=',True)]}" context="{'country_id': country_id}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('is_sync', '=', True)],'required': ['|',('is_pickup','=',True),('return_location','=',True)]}"/>
+                                <field name="country_id" placeholder="Country" readonly="1" force_save="1" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" attrs="{'readonly': [('is_sync', '=', True)],'required': ['|',('is_pickup','=',True),('return_location','=',True)]}"/>
+                            </div>
+                        </group>
+                        <!--<group>-->
+                            <label for="phone"/>
+                            <field name="phone" attrs="{'readonly': [('is_sync', '=', True)],'required': ['|',('is_pickup','=',True),('return_location','=',True)]}"/>
+                            <label for="email"/>
+                            <field name="email" attrs="{'readonly': [('is_sync', '=', True)],'required': ['|',('is_pickup','=',True),('return_location','=',True)]}"/>
+                            <field name="is_sync" invisible="1"/>
+                        <!--</group>-->
+                </group>
+            </group>
+
+        </field>
+    </record>
+    
+    
+    <!--Pickup Request ==============-->
+    
+    <record id="view_delivery_pickup_tree" model="ir.ui.view">
+        <field name="name">pickup.request.tree</field>
+        <field name="model">pickup.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="pickup_code"/>
+                <field name="pickup_date"/>
+                <field name="location_id"/>
+                <field name="center"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_delivery_pickup_form" model="ir.ui.view">
+        <field name="name">pickup.request.form</field>
+        <field name="model">pickup.request</field>
+        <field name="arch" type="xml">
+            <form string="Delivery Integration">
+                <header>
+                    <button name="request_pickup" type="object" string="Request Pickup" states="draft"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+<!--                            atr c-->
+<!--                            <field name="package_count" required="1" attrs="{'readonly': [('state','=','schedule')]}" domain="[('is_pickup','=',True)]"/>-->
+                            <field name="package_count" required="1" attrs="{'readonly': [('state','=','schedule')]}"/>
+                            <field name="location_id" options='{"no_open": True, "no_create": True}' required="1" domain="[('is_pickup','=',True),('is_sync','=',True)]" attrs="{'readonly': [('state','=','schedule')]}"/>
+                            <field name="picking_ids" options='{"no_open": True, "no_create": True}' required="1" widget="many2many_tags" domain="[('picking_type_id.code','=','outgoing'),
+                            ('pickup_id','=',False),('waybill','!=',False),('state','=','done'),('cancelled','=',False)]" attrs="{'readonly': [('state','=','schedule')]}"/>
+                            <field name="center" readonly="1" attrs="{'readonly': [('state','=','schedule')]}"/>
+                        </group>
+                        <group>
+                            <field name="pickup_date" required="1" attrs="{'readonly': [('state','=','schedule')]}"/>
+                            <field name="pickup_code" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_delivery_pickup" model="ir.actions.act_window">
+        <field name="name">Pickup Request</field>
+        <field name="res_model">pickup.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="pickup_root" name="Product Pickup Request" parent="stock.menu_stock_warehouse_mgmt"
+              action="action_delivery_pickup" groups="stock.group_stock_manager,stock.group_stock_user"/>
+
+    <menuitem id="pickup_root1" name="Product Pickup Request"
+        action="action_delivery_pickup"
+        parent="website_sale.menu_orders" sequence="3"/>
+    
+
+
+</odoo>
+
+

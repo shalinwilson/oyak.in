@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="package_picking_form" model="ir.ui.view">
+        <field name="name">package.picking.wizard</field>
+        <field name="model">package.picking</field>
+        <field name="arch" type="xml">
+            <form string="Packing Order Pickup">
+                <group>
+                    <field name="package_count"/>
+                    <field name="pickup_date"/>
+                    <field name="pickup_location"/>
+                    <field name="picking_id" invisible="1"/>
+
+                </group>
+                <footer>
+                    <button name="picking_order_confirm" string="Confirm" type="object" class="oe_highlight"
+                           />
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_package_picking_wizard1" model="ir.actions.act_window">
+        <field name="name">Packing Order Pickup</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">package.picking</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="package_picking_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
+

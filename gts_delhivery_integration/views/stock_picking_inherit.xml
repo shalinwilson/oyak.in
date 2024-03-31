@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="create_order_config" model="ir.ui.view">
+        <field name="name">stock.picking.create</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <button name="action_confirm" position="after">
+                <button name="create_delhivery_order" string="Generate Delhivery Slip" type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible' : ['|',('state','!=','done'),('carrier_tracking_ref','!=',False)]}"/>
+                <button name="print_slip" string="Print Shipping Label" type="object" class="oe_highlight" attrs="{'invisible' : ['|','|', ('carrier_tracking_ref', '=', False), ('cancelled', '=', True),('state','!=','done')]}"/>
+                <!--                <button name="generate_slip" string="Generate Slip" type="object" class="oe_highlight"/>-->
+                <button name="order_tracking" string="Track Order" type="object" class="oe_highlight"
+                        attrs="{'invisible' : ['|','|', ('waybill', '=', False), ('cancelled', '=', True),('state','!=','done')]}"/>
+
+                <button name="order_cancel" string="Cancel Delivery Waybill" type="object" class="oe_highlight" attrs="{'invisible' : ['|','|', ('waybill', '=', False), ('cancelled', '=', True),('state','!=','done')]}"/>
+
+                <!-- <button name="send_picking_status" string="Product Received" groups="base.group_user" type="object"/>  -->
+            </button>
+<!--            atr c-->
+            <field name="location_id" position="before">
+                <field name="payment_type"/>
+            </field>
+            <field name="location_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="picking_type_id" position="after">
+                <field name="pickup_location_id" options='{"no_open": True, "no_create": True}' required = "1" domain="[('is_pickup','=', True),('is_sync','=',True)]" attrs="{'readonly': [('state','=','done')]}" string="Pickup Location"/>
+                <field name="return_location_id" options='{"no_open": True, "no_create": True}' required = "1" domain="[('return_location','=', True)]" attrs="{'readonly': [('state','=','done')]}" string="Return Location"/>
+            </field>
+            <xpath expr="//page[@name='note']" position="before">
+                <page string="Delhivery Integration">
+                    <!--<group> -->
+                        <!--<field name="return_diff" help="Check this box if you want to Return Undelivered Shipment to Different Address"/>-->
+                    <!--</group>-->
+                    <group name="picking_type_code" string="Return Address" invisible="1">
+                        <field name="created_date" invisible="1"/>
+                        <field name="cst_name" invisible="1"/>
+                        <field name="cst_address" invisible="1"/>
+                        <field name="cst_city" invisible="1"/>
+                        <field name="cst_state" invisible="1"/>
+                        <field name="cst_zip" invisible="1"/>
+                        <field name="sname" invisible="1"/>
+                        <field name="sadd" invisible="1"/>
+                        <field name="waybill_no_data" invisible="1"/>
+                        <field name="order_id_data" invisible="1"/>
+                        <field name="pt" invisible="1"/>
+                        <!--<field name="r_name" string='Name' attrs="{'readonly':[('return_diff','=',False)]}"/>-->
+                        <!--<field name="return_phone" string='Phone' attrs="{'readonly':[('return_diff','=',False)]}"/>-->
+                        <!--<field name="r_add" string='Address' attrs="{'readonly':[('return_diff','=',False)]}"/>-->
+                        <!--<field name="r_cty" string='City' attrs="{'readonly':[('return_diff','=',False)]}"/>-->
+
+                        <field name="r_state" string='State' readonly="1" force_save = '1'/>
+                        <!--<field name="r_zip" string='ZIP' attrs="{'readonly':[('return_diff','=',False)]}"/>-->
+                    </group>
+                    <group>
+                        <group name="picking_type" string="Waybill Details">
+                            <field name="created_by" readonly="1"/>
+                            <field name="created_date" readonly="1"/>
+                            <field name="waybill" readonly="1"/>
+                        </group>
+                        <group name="picking_type_code" string="Order Pickup Response">
+                            <field name="picking" readonly="1"/>
+                            <field name="pickup_location" readonly="1"/>
+                            <field name="pickup_date" readonly="1"/>
+                            <field name="incoming_centre_name" readonly="1"/>
+                        </group>
+                        <group name="picking_type_code" string="Order Cancel Response">
+                            <field name="status" readonly="1"/>
+                            <field name="remark" readonly="1"/>
+                            <field name="order_id" readonly="1"/>
+                            <field name="cancelled_by" readonly="1"/>
+                            <field name="cancelled_date" readonly="1"/>
+                            <field name="cancelled" invisible="1"/>
+                        </group>
+                        <group name="picking_tracking" string="Order Tracking">
+                            <field name="current_status" readonly="1"/>
+                            <field name="current_location" readonly="1"/>
+                            <field name="expected_delivery_date" readonly="1"/>
+                            <field name="cancelled_waybill" readonly="1" invisible="1"/>
+                            <button name="get_order_track" string="Track Order" type="object" icon="fa-refresh text-primary" attrs="{'invisible': [('current_status', '=', 'Delivered')]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//form/header/field[@name='state']" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done,pro_recived" />
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="stock.vpicktree" model="ir.ui.view">
+            <field name="name">stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree string="Picking list" multi_edit="1"
+                      decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" 
+                      decoration-success="state == 'pro_recived'" decoration-danger="state not in ('cancel', 'done', 'pro_recived') and scheduled_date &lt; current_date">
+                    <field name="name"/>
+                    <field name="location_id" options="{'no_create': True}" string="From"  optional="show"/>
+                    <field name="location_dest_id" options="{'no_create': True}" string="To"  optional="show"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="user_id" optional="hide"/>
+                    <field name="date" invisible="1"/>
+                    <field name="scheduled_date" optional="show"/>
+                    <field name="origin" optional="show"/>
+                    <field name="group_id" invisible="1"/>
+                    <field name="backorder_id" optional="hide"/>
+                    <field name="state" optional="show"/>
+                    <field name="current_status" optional="show"/>
+                    <field name="priority" optional="hide"/>
+                    <field name="picking_type_id" optional="hide"/>
+                    <field name="company_id" optional="show"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                </tree>
+            </field>
+        </record>
+</odoo>

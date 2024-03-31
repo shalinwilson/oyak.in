@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Scheduler for OCR History record  Alarm-->
+        <record id="pincode_ir_cron_scheduler1" model="ir.cron">
+            <field name="name">Servicable Pincode</field>
+            <field name="model_id" ref="gts_delhivery_integration.model_delivery_configuration"/>
+            <field name="state">code</field>
+            <field name="code">model.get_pincode()</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+        </record>
+
+        <record model="ir.cron" id="order_tracking_cron">
+            <field name="name">Order Tracking 1</field>
+            <field name="model_id" ref="gts_delhivery_integration.model_stock_picking"/>
+            <field name="interval_number">12</field>
+            <field name="interval_type">hours</field>
+            <field name="type">ir.actions.server</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="state">code</field>
+            <field name="code">model.recive_by_customer()</field>
+            <field eval="True" name="active" />
+            <field name="nextcall" eval="(DateTime.now().replace(hour=8, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        </record>
+
+
+        <record model="ir.cron" id="order_tracking_cron2">
+            <field name="name">Order Tracking 2</field>
+            <field name="model_id" ref="gts_delhivery_integration.model_stock_picking"/>
+            <field name="interval_number">12</field>
+            <field name="interval_type">hours</field>
+            <field name="type">ir.actions.server</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="state">code</field>
+            <field name="code">model.recive_by_customer()</field>
+            <field eval="True" name="active" />
+            <field name="nextcall" eval="(DateTime.now().replace(hour=2, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        </record>
+
+        <record id="daily_delivery_status" model="ir.cron">
+            <field name="name">status</field>
+            <field name="model_id" ref="gts_delhivery_integration.model_stock_move"/>
+            <field name="state">code</field>
+            <field name="code">model.send_picking_status()</field>
+            <field eval="True" name="active" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+        </record>
+
+
+
+        <record id="group_user_sale_report" model="res.groups">
+            <field name="name">Sale Report Group (Stock)</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+
+    </data>
+</odoo>

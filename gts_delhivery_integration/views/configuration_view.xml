@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_configuration_tree" model="ir.ui.view">
+        <field name="name">delivery.configuration.tree</field>
+        <field name="model">delivery.configuration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="request_type"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_delivery_configuration_form" model="ir.ui.view">
+        <field name="name">delivery.configuration.form</field>
+        <field name="model">delivery.configuration</field>
+        <field name="arch" type="xml">
+            <form string="Delivery Integration">
+                <header>
+                    <button name="get_pincode" string="Get-Servicable-Pincode" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="request_type"/>
+                            <field name="order_tracking_url" required="1"/>
+                        </group>
+                        <group string="Test" colspan="4"
+                               attrs="{'invisible': [('request_type', '=', 'production')], 'required': [('request_type','=', 'test')]}">
+                            <field name="test_api" />
+                            <field name="pincode_test_url" attrs="{'required': [('request_type','=', 'test')]}"/>
+                            <field name="warehouse_sinking_test_url" attrs="{'required': [('request_type','=', 'test')]}"/>
+                            <field name="create_order_test" attrs="{'required': [('request_type','=', 'test')]}"/>
+                            <field name="slip_generate_test_url" attrs="{'required': [('request_type','=', 'test')]}"/>
+                            <field name="test_pickup_api_url" attrs="{'required': [('request_type','=', 'test')]}"/>
+                            <field name="cancel_order_test" attrs="{'required': [('request_type','=', 'test')]}"/>
+                            <field name="test_client" attrs="{'required': [('request_type','=', 'test')]}"/>
+                        </group>
+                        <group string="Production" colspan="4"
+                               attrs="{'invisible': [('request_type', '=', 'test')], 'required': [('request_type','=', 'production')]}">
+                            <field name="production_api" attrs="{'required': [('request_type','=', 'production')]}"/>
+                            <field name="pincode_Production_url" attrs="{'required': [('request_type','=', 'production')]}"/>
+                            <field name="warehouse_Production_url" attrs="{'required': [('request_type','=', 'production')]}"/>
+                            <field name="create_order_Production" attrs="{'required': [('request_type','=', 'production')]}"/>
+                            <field name="slip_generate_Production_url" attrs="{'required': [('request_type','=', 'production')]}"/>
+                            <field name="production_pickup_api_url" attrs="{'required': [('request_type','=', 'production')]}"/>
+                            <field name="cancel_order_production" attrs="{'required': [('request_type','=', 'production')]}"/>
+                            <field name="production_tracking_url" attrs="{'required': [('request_type','=', 'production')]}"/>
+                            <field name="production_client" attrs="{'required': [('request_type','=', 'production')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_delivery_configuration" model="ir.actions.act_window">
+        <field name="name">Delivery Integration</field>
+        <field name="res_model">delivery.configuration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new serviceable pincode
+            </p>
+        </field>
+    </record>
+
+<!--    <menuitem id="delivery_root" name="Delivery Integration" sequence="3"  groups="gts_delhivery_integration.group_delhivery"/>-->
+    <menuitem id="delivery_configuration_root" name="Delhivery Integration" parent="base.next_id_6" sequence="6"
+              action="action_delivery_configuration" groups="gts_delhivery_integration.group_delhivery"/>
+
+</odoo>

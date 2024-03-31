@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="paperformat_halfpage" model="report.paperformat">
+            <field name="name">Delhivery Paper Format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">8</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">22</field>
+            <field name="margin_right">22</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">10</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+                id="report_waybill_slip"
+                model="stock.picking"
+                string="Shipping Label"
+                report_type="qweb-pdf"
+                name="gts_delhivery_integration.report_waybill_slip"
+                file="gts_delhivery_integration.report_waybill_slip"
+                paperformat="gts_delhivery_integration.paperformat_halfpage"
+        />
+    </data>
+</odoo>

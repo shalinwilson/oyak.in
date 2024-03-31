@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_stock.sale_order_portal_content_inherit_sale_stock"
+              name="Orders Shipping Followup"
+              inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//div[@id='so_date']" position="after">
+            <div class="row" t-if="sale_order.incoterm">
+                <div class="mb-3 col-6 ml-auto">
+                    <strong>Incoterm:</strong>
+                    <span t-field="sale_order.incoterm"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='informations']" position="inside">
+            <t t-if="sale_order.picking_ids">
+                <div>
+                    <strong>Delivery Orders</strong>
+                </div>
+                <div>
+                    <t t-foreach="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code != 'internal')"
+                       t-as="i">
+                        <t t-set="delivery_report_url" t-value="'/my/picking/pdf/%s?%s' % (i.id, keep_query())"/>
+                        <div class="d-flex flex-wrap align-items-center justify-content-between o_sale_stock_picking">
+                            <div name="delivery_details" class="delivery_order">
+                                <a t-att-href="delivery_report_url">
+                                    <span t-esc="i.name"/>
+                                </a>
+                                <div class="small d-lg-inline-block ml-3">Date:
+                                    <span t-if="i.state == 'done'" class="text-muted" t-field="i.date_done"
+                                          t-options="{'date_only': True}"/>
+                                    <span t-if="i.state != 'done'" class="text-muted" t-field="i.scheduled_date"
+                                          t-options="{'date_only': True}"/>
+                                </div>
+                            </div>
+
+                            <span t-if="i.state == 'done'" class="small badge badge-success orders_label_text_align">
+                                <i class="fa fa-fw fa-truck"/>
+                                <b>Shipped</b>
+                            </span>
+                            <span t-if="i.state == 'pro_recived'"
+                                  class="small badge badge-info orders_label_text_align">
+                                <i class="fa fa-handshake-o"/>
+                                <b>Delivered</b>
+                            </span>
+                            <span t-if="i.state == 'cancel'" class="small badge badge-danger orders_label_text_align">
+                                <i class="fa fa-fw fa-times"/>
+                                <b>Cancelled</b>
+                            </span>
+                            <span t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']"
+                                  class="small badge badge-info orders_label_text_align">
+                                <i class="fa fa-fw fa-clock-o"/>
+                                <b>Preparation</b>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery"
+              name="Shipping tracking on orders followup"
+              inherit_id="sale_stock.sale_order_portal_content_inherit_sale_stock">
+        <xpath expr="//div[hasclass('delivery_order')]/div" position="after">
+            <div t-if="i.carrier_tracking_ref" class="small d-lg-inline-block">
+                Tracking No :
+                <t t-set="multiple_carrier_tracking" t-value="i.get_multiple_carrier_tracking()"/>
+                <t t-if="multiple_carrier_tracking">
+                    <t t-foreach="multiple_carrier_tracking" t-as="line">
+                        <a t-att-href="line[1]" target="_blank">
+                            <span t-esc="line[0]"/>
+                        </a>
+                        <span t-if="not line_last">+</span>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-if="i.carrier_tracking_url">
+                        <a t-att-href="i.carrier_tracking_url" target="_blank">
+                            <span t-field="i.carrier_tracking_ref"/>
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <span t-field="i.carrier_tracking_ref"/>
+                        <br/>
+                        Current Location :
+                        <span t-field="i.current_location"/>
+                        <br/>
+                        <a t-att-href="'https://www.delhivery.com/track/package/' + i.carrier_tracking_ref"
+                           target="_blank">
+                            <span>Click Here To Track Your Order</span>
+                        </a>
+                    </t>
+                </t>
+            </div>
+            <t t-if="i.carrier_id.get_return_label_from_portal and i.return_label_ids">
+                <div>
+                    <a class="ml-3" t-attf-href="/web/content/#{i.return_label_ids[:1].id}" target="_blank">Print Return
+                        Label
+                    </a>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

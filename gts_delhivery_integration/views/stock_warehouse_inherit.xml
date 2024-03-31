@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="warehouse_sink_with_delhivery" model="ir.ui.view">
+        <field name="name">stock.warehouse.sink</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/*" position="before">
+                <header>
+                    <button name="register_warehouse_with_delhivery" string="Sink With Delhivery" type="object"
+                            class="oe_highlight"/>
+                </header>
+            </xpath>
+            <field name="code" position="before">
+                <field name="sync_with_delhivery" readonly="1"/>
+                <field name="delhivery_credential_id"/>
+            </field>
+            <xpath expr="//form/sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
