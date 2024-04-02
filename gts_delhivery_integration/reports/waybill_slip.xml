@@ -51,8 +51,11 @@
                             <td colspan="4">
                                 <t t-if="doc.waybill_no_data">
                                     <center>
-                                        <img t-att-src="doc.waybill_no_data.convert_string_to_byte()" class="image1"
-                                             style="width:290px;"/>
+<!--                                        <img t-att-src="doc.waybill_no_data.convert_string_to_byte()" class="image1"-->
+<!--                                             style="width:290px;"/>-->
+
+                                        <img t-att-src="'data:image/png;base64,%s' % doc.waybill_no_binary"  style="width:290px;" class="image1"/>
+
                                     </center>
                                 </t>
                             </td>
@@ -155,7 +158,8 @@
                             <td colspan="4">
                                 <t t-if="doc.order_id_data">
                                     <center>
-                                        <img t-att-src="doc.convert_string_oid_byte()" class="image2"/>
+                                                                               <img t-att-src="'data:image/png;base64,%s' % doc.waybill_no_binary"  style="width:290px;" class="image2"/>
+
                                     </center>
                                 </t>
                             </td>

@@ -1,3 +1,5 @@
+import base64
+
 from odoo import models, fields, api, _
 import requests
 import json
@@ -19,8 +21,23 @@ class StockPicking(models.Model):
     incoming_centre_name = fields.Char(string='Incoming Centre Name')
     pickup_location = fields.Char(string='Pickup Location')
     pickup_date = fields.Char(string='Pickup Date')
-    waybill_no_data = fields.Char(string='Waybill-Barcode')
+
+    @api.depends('waybill_no_data','order_id_data')
+    def _compute_image_binary(self):
+        for record in self:
+            if record.waybill_no_data:
+                record.waybill_no_binary = base64.b64decode(record.image_base64)
+            else:
+                record.waybill_no_binary = False
+            if record.order_id_data:
+                record.order_id_binary = base64.b64decode(record.order_id_binary)
+            else:
+                record.order_id_binary = False
+
+    waybill_no_data = fields.Char(string='Waybill-Barcode',compute='_compute_image_binary')
+    waybill_no_binary = fields.Binary("Binary image barcode")
     order_id_data = fields.Char(string='Order ID-Barcode')
+    order_id_binary = fields.Binary("order barcode",compute='_compute_image_binary')
     cst_name = fields.Char(string='Customer Name')
     cst_address = fields.Char(string='Customer Address')
     cst_city = fields.Char(string='Customer City')
