@@ -1,3 +1,5 @@
+import base64
+
 from odoo import models, fields, api, _
 import requests
 import json
@@ -392,12 +394,12 @@ class StockPicking(models.Model):
             })
 
     def convert_string_to_byte(self):
-        barcode_waybill = str.decode(self.waybill_no_data)
-        return barcode_waybill
+        barcode_waybill = self.waybill_no_data.split(",")[-1]
+        return base64.b64decode(barcode_waybill)
 
     def convert_string_oid_byte(self):
-        oid = str.decode(self.order_id_data)
-        return oid
+        order_id_data = self.order_id_data.split(",")[-1]
+        return base64.b64decode(barcode_waybill)
 
     def order_tracking(self):
         if not self.carrier_tracking_ref:
