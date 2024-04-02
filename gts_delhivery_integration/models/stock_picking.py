@@ -26,20 +26,10 @@ class StockPicking(models.Model):
     def _compute_image_binary(self):
         for record in self:
             if record.waybill_no_data:
-                missing_padding = len(record.waybill_no_data) % 4
-                if missing_padding != 0:
-                    record.waybill_no_data += '=' * (4 - missing_padding)
-
-
-
                 record.waybill_no_binary = base64.b64decode(record.waybill_no_data)
             else:
                 record.waybill_no_binary = False
             if record.order_id_data:
-                missing_padding = len(record.order_id_data) % 4
-                if missing_padding != 0:
-                    record.order_id_data += '=' * (4 - missing_padding)
-
                 record.order_id_binary = base64.b64decode(record.order_id_data)
             else:
                 record.order_id_binary = False
