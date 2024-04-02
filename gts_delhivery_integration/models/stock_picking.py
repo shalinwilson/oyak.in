@@ -30,7 +30,7 @@ class StockPicking(models.Model):
             else:
                 record.waybill_no_binary = False
             if record.order_id_data:
-                record.order_id_binary = base64.b64decode(record.order_id_binary)
+                record.order_id_binary = base64.b64decode(record.order_id_data)
             else:
                 record.order_id_binary = False
 
