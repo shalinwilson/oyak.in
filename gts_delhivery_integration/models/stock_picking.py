@@ -44,8 +44,8 @@ class StockPicking(models.Model):
             else:
                 record.order_id_binary = False
 
-    waybill_no_data = fields.Char(string='Waybill-Barcode',compute='_compute_image_binary')
-    waybill_no_binary = fields.Binary("Binary image barcode")
+    waybill_no_data = fields.Char(string='Waybill-Barcode')
+    waybill_no_binary = fields.Binary("Binary image barcode",compute='_compute_image_binary')
     order_id_data = fields.Char(string='Order ID-Barcode')
     order_id_binary = fields.Binary("order barcode",compute='_compute_image_binary')
     cst_name = fields.Char(string='Customer Name')
