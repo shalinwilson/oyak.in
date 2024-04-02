@@ -43,7 +43,7 @@
                                      class="float-right" alt="Logo" style="width:180px;height:100px;"/>
                             </td>
                             <td colspan="2" width="50%" style="align:right;">
-                                <img src="/static/src/delhiverylogo.png"
+                                <img src="/gts_delhivery_integration/static/src/delhiverylogo.png"
                                      class="image" style="width:190px;height:60px;"/>
                             </td>
                         </tr>

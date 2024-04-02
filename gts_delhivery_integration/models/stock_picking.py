@@ -392,11 +392,11 @@ class StockPicking(models.Model):
             })
 
     def convert_string_to_byte(self):
-        barcode_waybill = str.encode(self.waybill_no_data)
+        barcode_waybill = str.decode(self.waybill_no_data)
         return barcode_waybill
 
     def convert_string_oid_byte(self):
-        oid = str.encode(self.order_id_data)
+        oid = str.decode(self.order_id_data)
         return oid
 
     def order_tracking(self):
