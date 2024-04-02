@@ -17,7 +17,7 @@
         'views/sale_order_inherit.xml',
         'views/website_order_template.xml',
         'reports/reports.xml',
-        # 'reports/waybill_slip.xml',
+        'reports/waybill_slip.xml',
         'views/stock_move.xml',
         'data/pincode_crone.xml',
     ],

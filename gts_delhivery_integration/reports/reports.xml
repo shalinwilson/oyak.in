@@ -23,8 +23,8 @@
                 model="stock.picking"
                 string="Shipping Label"
                 report_type="qweb-pdf"
-                name="gts_delhivery_integration.report_waybill_slip"
-                file="gts_delhivery_integration.report_waybill_slip"
+                name="gts_delhivery_integration.report_waybill_slip_template"
+                file="gts_delhivery_integration.report_waybill_slip_template"
                 paperformat="gts_delhivery_integration.paperformat_halfpage"
         />
     </data>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="product_product_delivery_charge" model="product.product">
+            <field name="name">Delivery charges Cod</field>
+            <field name="default_code">Delivery_1000</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+        </record>
+        <record id="cod_delivery_carrier" model="delivery.carrier">
+            <field name="name">Delivery charges Cod</field>
+            <field name="fixed_price">50</field>
+            <field name="free_over" eval="False"/>
+            <field name="amount">1000</field>
+            <field name="sequence">1</field>
+            <field name="delivery_type">fixed</field>
+            <field name="product_id" ref="cash_on_delivery.product_product_delivery_charge"/>
+        </record>
+
+</odoo>

@@ -289,7 +289,7 @@ class StockPicking(models.Model):
             success = True
             # self.env.user.notify_danger(message='Hi %s, \n \n We are happy to inform you that your order is ready, shipped, and on its way to you! You know what this means- you will soon own an original, unique, and handcrafted product, made with love by the women of Shilpgram \n \n Your order will be delivered by our logistics partner Delhivery. You can track your shipment [link] with tracking No: %s \n \n If you have any questions for us, just hit reply and our team will be happy to help you.' % (self.partner_id.name, key.get('waybill')))
             # notification = _('Hi %s, \n \n We are happy to inform you that your order is ready, shipped, and on its way to you! You know what this means- you will soon own an original, unique, and handcrafted product, made with love by the women of Shilpgram \n \n Your order will be delivered by our logistics partner Delhivery. You can track your shipment [link] with tracking No: %s \n \n If you have any questions for us, just hit reply and our team will be happy to help you.' % (self.partner_id.name, key.get('waybill')))
-            subject = 'Your Shilpgram order is %s on its way to you!' % (self.origin)
+            subject = 'Your OYAK order is %s on its way to you!' % (self.origin)
             html = """
                 <!DOCTYPE html>
                 <html>
@@ -306,12 +306,12 @@ class StockPicking(models.Model):
                 <br/><br/>
                 <div class="s_share" data-name="Share">
                     # <h4 class="s_share_title">Follow us </h4>
-                    # <a href="https://www.facebook.com/ShilpgramBRLPS" target="_blank">
-                    #   <img src="https://img.icons8.com/fluency/30/000000/facebook-new.png"/>
-                    # </a>
-                    # <a href="https://twitter.com/shilpgram_brlps">
-                    #   <img src="https://img.icons8.com/color/30/000000/twitter.png"/>
-                    # </a>
+                    <a href="https://www.facebook.com/ShilpgramBRLPS" target="_blank">
+                      <img src="https://img.icons8.com/fluency/30/000000/facebook-new.png"/>
+                    </a>
+                    <a href="https://twitter.com/shilpgram_brlps">
+                      <img src="https://img.icons8.com/color/30/000000/twitter.png"/>
+                    </a>
                     <a href="https://www.instagram.com/oyak_clothing/">
                       <img src="https://img.icons8.com/color/30/000000/instagram-new.png"/>
                     </a>
@@ -324,7 +324,13 @@ class StockPicking(models.Model):
             raise UserError(_(msg))
         self.message_post(body=html, message_type="notification", subtype_id=self.env.ref('mail.mt_comment').id,
                           subject=subject)
-        self.generate_slip()
+        try:
+            self.generate_slip()
+        except:
+            pass
+
+
+
 
     @api.model
     def create(self, vals_list):
@@ -344,7 +350,8 @@ class StockPicking(models.Model):
         # function for generate pdf slip(Package slip)
         if not self.carrier_tracking_ref:
             raise UserError(_('Waybill No Not Found. Please verify and Generate it in-order to Generate Pickup'))
-        waybill = self.carrier_tracking_ref
+        # check
+        waybill = 'wbns='+str(self.carrier_tracking_ref)
         configuration = self.env['delivery.configuration'].search([], limit=1)
         if configuration.request_type == 'test':
             url = configuration.slip_generate_test_url
@@ -357,6 +364,7 @@ class StockPicking(models.Model):
         headers = {'Authorization': 'Token' + ' ' + api}
         response = requests.get(url + waybill, headers=headers)
         res = response.content
+        print(res)
         df1 = json.loads(res.decode('utf-8'))
         for key in df1['packages']:
             self.write({
@@ -434,8 +442,8 @@ class StockPicking(models.Model):
             'cancelled_by': self.env.user.id,
             'cancelled_date': datetime.datetime.now()
         })
-        self.env.user.notify_danger(
-            message='Remark: %s And Order-No is: %s' % (xml_dict.get('remark'), (xml_dict.get('order_id'))))
+        raise UserError(_('Remark: %s And Order-No is: %s' % (xml_dict.get('remark'), (xml_dict.get('order_id')))))
+
 
     def recive_by_customer(self):
         order_picking = self.env['stock.picking'].search(
