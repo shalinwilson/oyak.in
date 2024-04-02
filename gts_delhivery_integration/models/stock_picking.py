@@ -357,7 +357,7 @@ class StockPicking(models.Model):
             raise UserError(_('Waybill No Not Found. Please verify and Generate it in-order to Generate Pickup'))
         # TODO : uncomment button and check
         # waybill = 'wbns='+str(self.carrier_tracking_ref)
-        waybill = 'wbns='+str(self.carrier_tracking_ref)
+        waybill = '?wbns='+str(self.carrier_tracking_ref)
         configuration = self.env['delivery.configuration'].search([], limit=1)
         if configuration.request_type == 'test':
             url = configuration.slip_generate_test_url
