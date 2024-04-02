@@ -10,7 +10,8 @@
                         class="oe_highlight"
                         attrs="{'invisible' : ['|',('state','!=','done'),('carrier_tracking_ref','!=',False)]}"/>
                 <button name="print_slip" string="Print Shipping Label" type="object" class="oe_highlight" attrs="{'invisible' : ['|','|', ('carrier_tracking_ref', '=', False), ('cancelled', '=', True),('state','!=','done')]}"/>
-                <!--                <button name="generate_slip" string="Generate Slip" type="object" class="oe_highlight"/>-->
+<!--                TODO:-->
+                                <button name="generate_slip" string="Generate Slip" type="object" class="oe_highlight"/>
                 <button name="order_tracking" string="Track Order" type="object" class="oe_highlight"
                         attrs="{'invisible' : ['|','|', ('waybill', '=', False), ('cancelled', '=', True),('state','!=','done')]}"/>
 

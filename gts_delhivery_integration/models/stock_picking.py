@@ -220,6 +220,11 @@ class StockPicking(models.Model):
             "shipments": [{
                 "add": partner_street + ' ' + partner_street2,
                 'address_type': 'home',
+                # todo check BLH
+                # "shipment_length":self.afield cm
+                # "shipment_height":self.afield cm
+                # "shipment_width":self.afield cm
+
                 "phone": phone,
                 "payment_mode": self.payment_type,
                 "name": partner_name,
@@ -305,13 +310,13 @@ class StockPicking(models.Model):
                 If you have any questions for us, just hit reply and our team will be happy to help you.
                 <br/><br/>
                 <div class="s_share" data-name="Share">
-                    # <h4 class="s_share_title">Follow us </h4>
-                    <a href="https://www.facebook.com/ShilpgramBRLPS" target="_blank">
-                      <img src="https://img.icons8.com/fluency/30/000000/facebook-new.png"/>
-                    </a>
-                    <a href="https://twitter.com/shilpgram_brlps">
-                      <img src="https://img.icons8.com/color/30/000000/twitter.png"/>
-                    </a>
+                    # # <h4 class="s_share_title">Follow us </h4>
+                    # <a href="https://www.facebook.com/ShilpgramBRLPS" target="_blank">
+                    #   <img src="https://img.icons8.com/fluency/30/000000/facebook-new.png"/>
+                    # </a>
+                    # <a href="https://twitter.com/shilpgram_brlps">
+                    #   <img src="https://img.icons8.com/color/30/000000/twitter.png"/>
+                    # </a>
                     <a href="https://www.instagram.com/oyak_clothing/">
                       <img src="https://img.icons8.com/color/30/000000/instagram-new.png"/>
                     </a>
@@ -350,7 +355,8 @@ class StockPicking(models.Model):
         # function for generate pdf slip(Package slip)
         if not self.carrier_tracking_ref:
             raise UserError(_('Waybill No Not Found. Please verify and Generate it in-order to Generate Pickup'))
-        # check
+        # TODO : uncomment button and check
+        # waybill = 'wbns='+str(self.carrier_tracking_ref)
         waybill = 'wbns='+str(self.carrier_tracking_ref)
         configuration = self.env['delivery.configuration'].search([], limit=1)
         if configuration.request_type == 'test':
@@ -401,7 +407,7 @@ class StockPicking(models.Model):
             'type': 'ir.actions.act_url',
             'name': "Shipment Tracking Page",
             'target': 'new',
-            'url': configuration.order_tracking_url,
+            'url': configuration.order_tracking_url+self.carrier_tracking_ref,
         }
         return client_action
 
