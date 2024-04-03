@@ -21,6 +21,11 @@ class StockPicking(models.Model):
     incoming_centre_name = fields.Char(string='Incoming Centre Name')
     pickup_location = fields.Char(string='Pickup Location')
     pickup_date = fields.Char(string='Pickup Date')
+
+
+
+
+
     waybill_no_data = fields.Char(string='Waybill-Barcode')
     order_id_data = fields.Char(string='Order ID-Barcode')
     cst_name = fields.Char(string='Customer Name')
@@ -393,13 +398,6 @@ class StockPicking(models.Model):
                 'pt': key.get('pt'),
             })
 
-    def convert_string_to_byte(self):
-        barcode_waybill = self.waybill_no_data.split(",")[-1]
-        return base64.b64decode(barcode_waybill)
-
-    def convert_string_oid_byte(self):
-        order_id_data = self.order_id_data.split(",")[-1]
-        return base64.b64decode(barcode_waybill)
 
     def order_tracking(self):
         if not self.carrier_tracking_ref:
