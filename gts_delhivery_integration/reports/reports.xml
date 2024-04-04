@@ -19,7 +19,7 @@
         </record>
 
         <report
-                id="report_waybill_slip"
+                id="report_waybill_slip_report"
                 model="stock.picking"
                 string="Shipping Label"
                 report_type="qweb-pdf"

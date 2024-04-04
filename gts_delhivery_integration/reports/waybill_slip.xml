@@ -3,38 +3,38 @@
     <template id="report_waybill_slip_template">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
-                <style>
-                    table,td {
-                    border: 1px solid black;
-                    border-collapse: collapse;
-                    }
-                    th, td {
-                    padding: 10px;
-                    }
-                    .image {
-                    width: 180px;
-                    height: 80px;
-                    }
-                    .image1 {
-                    width: 220px;
-                    height: 100px;
-                    }
-                    .image2 {
-                    width: 220px;
-                    height: 80px;
-                    }
-                    p {
-                    font-size: 11px;
-                    }
-                    #bottom {
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    }
-                    tr.noBorder td {
-                    border: 0;
-                    }
-                </style>
+                    <style>
+                        table,td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        }
+                        th, td {
+                        padding: 10px;
+                        }
+                        .image {
+                        width: 180px;
+                        height: 80px;
+                        }
+                        .image1 {
+                        width: 220px;
+                        height: 100px;
+                        }
+                        .image2 {
+                        width: 220px;
+                        height: 80px;
+                        }
+                        p {
+                        font-size: 11px;
+                        }
+                        #bottom {
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        }
+                        tr.noBorder td {
+                        border: 0;
+                        }
+                    </style>
                 <body>
                     <table>
                         <tr>
@@ -43,17 +43,15 @@
                                      class="float-right" alt="Logo" style="width:180px;height:100px;"/>
                             </td>
                             <td colspan="2" width="50%" style="align:right;">
-                                <img src="/gts_delhivery_integration/static/src/delhiverylogo.png"
-                                     class="image" style="width:190px;height:60px;"/>
+                                <img src="/gts_delhivery_integration/static/src/img/delhiverylogo.png"
+                                     class="img" style="width:190px;height:60px;"/>
                             </td>
                         </tr>
                         <tr style="border: 0;">
                             <td colspan="4">
                                 <t t-if="doc.waybill_no_data">
                                     <center>
-
-                                        <img src="doc.waybill_no_data"/>
-
+                                       <img t-att-src="doc.waybill_no_data"/>
                                     </center>
                                 </t>
                             </td>
@@ -113,9 +111,9 @@
                             <th colspan="1.5">Product</th>
                             <th colspan="2.0">Description</th>
                             <th colspan="0.5">Quantity</th>
-                            <!--                            <th>-->
-                            <!--                                <b>Total</b>-->
-                            <!--                            </th>-->
+<!--                            <th>-->
+<!--                                <b>Total</b>-->
+<!--                            </th>-->
                         </tr>
                         <tr t-foreach="doc.move_ids_without_package" t-as="line">
                             <td colspan="1.5" width="40%">
@@ -127,36 +125,36 @@
                             <td colspan="0.5" width="20%">
                                 <t t-esc="line.quantity_done"/>
                             </td>
-                            <!--                            <td colspan="0.5" width="20%">₹-->
-                            <!--                                <t t-esc="line.sale_line_id.price_unit"/>-->
-                            <!--                            </td>-->
-                            <!--                            <td>₹-->
-                            <!--                                <span t-esc="line.sale_line_id.price_unit * line.quantity_done"/>-->
-                            <!--                            </td>-->
+<!--                            <td colspan="0.5" width="20%">₹-->
+<!--                                <t t-esc="line.sale_line_id.price_unit"/>-->
+<!--                            </td>-->
+<!--                            <td>₹-->
+<!--                                <span t-esc="line.sale_line_id.price_unit * line.quantity_done"/>-->
+<!--                            </td>-->
                         </tr>
-                        <!--                        <tr>-->
-                        <!--                            <td colspan="3" width="20">-->
-                        <!--                                <b>Total</b>-->
-                        <!--                            </td>-->
-                        <!--                            <t t-set="test_variable" t-value="0"/>-->
-                        <!--                            <t t-foreach="doc.move_ids_without_package" t-as="l">-->
-                        <!--                                <t t-set="test_variable"-->
-                        <!--                                   t-value="test_variable+l.sale_line_id.price_unit * l.quantity_done"/>-->
-                        <!--                            </t>-->
-                        <!--                            <td>₹-->
-                        <!--                                <b>-->
-                        <!--                                    <t t-esc="test_variable" t-options='{"widget": "float", "precision": 2}'/>-->
-                        <!--                                </b>-->
-                        <!--                            </td>-->
-                        <!--                            &lt;!&ndash;                            <td>₹&ndash;&gt;-->
-                        <!--                                <t t-esc="test_variable" t-options='{"widget": "float", "precision": 2}'/>-->
-                        <!--                            </td>-->
-                        <!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td colspan="3" width="20">-->
+<!--                                <b>Total</b>-->
+<!--                            </td>-->
+<!--                            <t t-set="test_variable" t-value="0"/>-->
+<!--                            <t t-foreach="doc.move_ids_without_package" t-as="l">-->
+<!--                                <t t-set="test_variable"-->
+<!--                                   t-value="test_variable+l.sale_line_id.price_unit * l.quantity_done"/>-->
+<!--                            </t>-->
+<!--                            <td>₹-->
+<!--                                <b>-->
+<!--                                    <t t-esc="test_variable" t-options='{"widget": "float", "precision": 2}'/>-->
+<!--                                </b>-->
+<!--                            </td>-->
+<!--                            &lt;!&ndash;                            <td>₹&ndash;&gt;-->
+                            <!--                                <t t-esc="test_variable" t-options='{"widget": "float", "precision": 2}'/>-->
+                            <!--                            </td>-->
+<!--                        </tr>-->
                         <tr>
                             <td colspan="4">
                                 <t t-if="doc.order_id_data">
                                     <center>
-                                        <img src="doc.order_id_data" class="image2"/>
+                                         <img t-att-src="doc.order_id_data" class="image2"/>
                                     </center>
                                 </t>
                             </td>

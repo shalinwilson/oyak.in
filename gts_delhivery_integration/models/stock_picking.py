@@ -21,11 +21,6 @@ class StockPicking(models.Model):
     incoming_centre_name = fields.Char(string='Incoming Centre Name')
     pickup_location = fields.Char(string='Pickup Location')
     pickup_date = fields.Char(string='Pickup Date')
-
-
-
-
-
     waybill_no_data = fields.Char(string='Waybill-Barcode')
     order_id_data = fields.Char(string='Order ID-Barcode')
     cst_name = fields.Char(string='Customer Name')
@@ -228,9 +223,9 @@ class StockPicking(models.Model):
                 "add": partner_street + ' ' + partner_street2,
                 'address_type': 'home',
                 # todo check BLH
-                # "shipment_length":self.afield cm
-                # "shipment_height":self.afield cm
-                # "shipment_width":self.afield cm
+                "shipment_length":25,
+                "shipment_height": 25,
+                "shipment_width": 3,
 
                 "phone": phone,
                 "payment_mode": self.payment_type,
@@ -398,6 +393,15 @@ class StockPicking(models.Model):
                 'pt': key.get('pt'),
             })
 
+    # def convert_string_to_byte(self):
+    #     # barcode_waybill = str.encode(self.waybill_no_data)
+    #     barcode_waybill = base64.b64decode(self.waybill_no_data)
+    #     self.waybill_no_binary = base64.b64decode(self.waybill_no_data)
+    #     return self.waybill_no_binary
+
+    # def convert_string_oid_byte(self):
+    #     oid = str.encode(self.order_id_data)
+    #     return oid
 
     def order_tracking(self):
         if not self.carrier_tracking_ref:

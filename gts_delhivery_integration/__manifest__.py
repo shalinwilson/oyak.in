@@ -21,7 +21,7 @@
         'views/stock_move.xml',
         'data/pincode_crone.xml',
     ],
-    'images': ['static/description/banner.png'],
+    'images': ['static/description/banner.png','static/src/img/delhiverylogo.png'],
     'price': 20,
     'currency': 'USD',
     'license': 'OPL-1',
