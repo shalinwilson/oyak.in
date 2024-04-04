@@ -172,6 +172,7 @@ class StockPicking(models.Model):
             raise UserError(_('Please Enter Customer Country'))
 
         weight = 0.0
+        product_name = ''
         partner_name = self.partner_id.name
         partner_name = partner_name.replace('#', '').replace('%', '').replace('&', '').replace(';', '').replace('\\',
                                                                                                                 '')
@@ -181,7 +182,7 @@ class StockPicking(models.Model):
         partner_street = self.partner_id.street
         partner_street = partner_street.replace('#', '').replace('%', '').replace('&', '').replace(';', '').replace(
             '\\', '')
-        partner_street2 = self.partner_id.street2
+        partner_street2 = self.partner_id.street2 or ''
         partner_street2 = partner_street2.replace('#', '').replace('%', '').replace('&', '').replace(';', '').replace(
             '\\', '')
         return_location_name = self.return_location_id.name
@@ -216,6 +217,7 @@ class StockPicking(models.Model):
             ';', '').replace('\\', '')
         for item in self.move_ids_without_package:
             weight += item.product_id.weight * item.product_uom_qty
+            product_name += item.product_id.name
         phone = self.partner_id.mobile or self.partner_id.phone
         phone = phone.replace(' ', '')
         data = {
@@ -226,7 +228,7 @@ class StockPicking(models.Model):
                 "shipment_length":25,
                 "shipment_height": 25,
                 "shipment_width": 3,
-
+                "products_desc":product_name,
                 "phone": phone,
                 "payment_mode": self.payment_type,
                 "name": partner_name,
