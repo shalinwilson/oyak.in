@@ -9,9 +9,23 @@ class SaleOrder(models.Model):
         ('Pre_paid', 'Pre-Paid'),
     ], string='Payment-Type', compute='_compute_payment_type')
 
+    @api.depends('picking_ids',)
+    def _get_shipping_status(self):
+        for rec in self:
+            for picking in rec.picking_ids:
+                if picking.state != 'cancel':
+                    if picking.carrier_tracking_ref:
+                        rec.tracking_number = picking.carrier_tracking_ref
+                    else:
+                        rec.tracking_number = ''
+                else:
+                    rec.tracking_number = ''
+
+
     state_id = fields.Many2one('res.country.state', string='State', related='partner_id.state_id')
     city = fields.Char('City', related='partner_id.city')
     zip = fields.Char('ZIP', related='partner_id.zip')
+    tracking_number = fields.Char(compute="_get_shipping_status",store=1)
 
     @api.depends('order_line', 'order_line.product_id')
     def _compute_payment_type(self):
