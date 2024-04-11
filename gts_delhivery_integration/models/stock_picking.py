@@ -266,7 +266,7 @@ class StockPicking(models.Model):
         if self.payment_type == 'cod':
             data["shipments"][0].update({"cod_amount": total_amount})
         if weight:
-            data["shipments"][0].update({'weight': weight})
+            data["shipments"][0].update({'weight': weight * 1000})
 
         payload = "format=json&data={}".format(str(data).replace("'", '"'))
         configuration = self.env['delivery.configuration'].search([], limit=1)
