@@ -13,8 +13,8 @@ class SaleOrder(models.Model):
         for rec in self:
             for picking in rec.picking_ids:
                 if picking.state != 'cancel':
-                    if picking.carrier_tracking_ref:
-                        rec.tracking_number = picking.carrier_tracking_ref
+                    if picking.waybill:
+                        rec.tracking_number = picking.waybill
                     else:
                         rec.tracking_number = ''
                 else:
