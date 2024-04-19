@@ -19,6 +19,8 @@ class SaleOrder(models.Model):
                         rec.tracking_number = ''
                 else:
                     rec.tracking_number = ''
+            if not rec.picking_ids:
+                rec.tracking_number = ''
 
 
     state_id = fields.Many2one('res.country.state', string='State', related='partner_id.state_id')
