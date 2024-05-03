@@ -330,7 +330,7 @@ class StockPicking(models.Model):
 
         if not success:
             msg = 'Could not Generate Delivery Slip due to Technical Error'+str(res_dic)
-            raise UserError(_(msg))
+            raise UserError(_(msg+str(payload)))
         self.message_post(body=html, message_type="notification", subtype_id=self.env.ref('mail.mt_comment').id,
                           subject=subject)
         try:
