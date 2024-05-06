@@ -286,6 +286,7 @@ class StockPicking(models.Model):
         res = response.content
         res_dic = json.loads(res.decode('utf-8'))
         logger.info("=========waybill Response====%s====", res_dic)
+        self.note = res_dic
         success = False
         for key in res_dic.get('packages'):
             self.write({
