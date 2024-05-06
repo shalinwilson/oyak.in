@@ -21,6 +21,11 @@ class SaleOrder(models.Model):
                     rec.tracking_number = ''
             if not rec.picking_ids:
                 rec.tracking_number = ''
+    def make_delhivery_order(self):
+        if len(self.picking_ids) == 1:
+            so_count = self.partner_id.sale_order_count
+            if so_count == 1:
+                self.picking_ids.create_delhivery_order()
 
 
     state_id = fields.Many2one('res.country.state', string='State', related='partner_id.state_id')
