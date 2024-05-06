@@ -31,7 +31,7 @@
     'company': 'Cybrosys Techno Solutions',
     'website': 'https://www.cybrosys.com',
     'category': 'Website',
-    'depends': ['website_sale', 'stock', 'sale_management','auth_signup'],
+    'depends': ['website_sale', 'stock', 'sale_management','auth_signup','gts_delhivery_integration'],
     'data': [
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
