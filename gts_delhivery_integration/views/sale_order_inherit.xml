@@ -2,13 +2,12 @@
 <odoo>
     <record id="action_validate_delhivery" model="ir.actions.server">
             <field name="name">Create Delhivery Order</field>
-            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="model_id" ref="sale.model_sale_order"/>
             <field name="binding_model_id" ref="sale.model_sale_order"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">form,list</field>
             <field name="state">code</field>
             <field name="code">
-            if records:
-                res = records.make_delhivery_order()
+                    action = records.make_delhivery_order()
             </field>
         </record>
     <record id="sale_order_delivery_type" model="ir.ui.view">
