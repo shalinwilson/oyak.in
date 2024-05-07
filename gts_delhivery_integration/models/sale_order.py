@@ -34,6 +34,14 @@ class SaleOrder(models.Model):
     city = fields.Char('City', related='partner_id.city')
     zip = fields.Char('ZIP', related='partner_id.zip')
     tracking_number = fields.Char(compute="_get_tracking_number")
+    call_detail = fields.Selection(
+        string='Call Detail',
+        selection=[('confirm', 'Confirmed'),
+                   ('not_connected', 'Not Connected'),
+                   ('cancel', 'Cancel'),
+                   ],
+        required=False, tracking=True)
+
 
     @api.depends('order_line', 'order_line.product_id')
     def _compute_payment_type(self):

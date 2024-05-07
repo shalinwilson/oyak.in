@@ -21,6 +21,7 @@
 <!--             </xpath>-->
             <field name="analytic_account_id" position="after">
                 <field name="payment_type"/>
+                <field name="call_detail"/>
             </field>
         </field>
     </record>
@@ -31,6 +32,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='invoice_status']" position="after">
+               <field name="call_detail"/>
                <field name="tracking_number"/>
             </xpath>
 
