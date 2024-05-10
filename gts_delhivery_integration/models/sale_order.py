@@ -28,7 +28,8 @@ class SaleOrder(models.Model):
             so_count = len(so.filtered(lambda x:x.state=='sale'))
             if so_count < 2:
                 try:
-                    self.picking_ids.create_delhivery_order()
+                    if self.picking_ids:
+                        self.picking_ids.create_delhivery_order()
                 except:
                     pass
 
