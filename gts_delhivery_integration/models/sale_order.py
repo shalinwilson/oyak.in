@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
     def make_delhivery_order(self):
         if len(self.picking_ids) == 1:
             all_child = self.env["res.partner"].with_context(active_test=False).search([('id', 'child_of', self.partner_id.ids)])
-            so = self.env["sale.order"].serach([("partner_id", "in", all_child.ids)])
+            so = self.env["sale.order"].search([("partner_id", "in", all_child.ids)])
             so_count = len(so.filtered(lambda x:x.state=='sale'))
             if so_count < 2:
                 try:
