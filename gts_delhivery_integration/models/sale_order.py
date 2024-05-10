@@ -25,10 +25,11 @@ class SaleOrder(models.Model):
         if len(self.picking_ids) == 1:
             # all_child = self.env["res.partner"].with_context(active_test=False).search([('id', 'child_of', self.partner_id.ids)])
             so = self.env["sale.order"].search([("partner_id", "in", self.partner_id.ids)])
+
             so_count = len(so.filtered(lambda x:x.state=='sale'))
-            if so_count < 2:
+            so.client_order_ref = so_count
+            if so_count == 1:
                 try:
-                    if self.picking_ids:
                         self.picking_ids.create_delhivery_order()
                 except:
                     pass
