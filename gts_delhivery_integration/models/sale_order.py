@@ -22,15 +22,16 @@ class SaleOrder(models.Model):
             if not rec.picking_ids:
                 rec.tracking_number = ''
     def make_delhivery_order(self):
-        print("worlimmnad adssssssssssssssss",self.picking_ids,self.partner_id.sale_order_count)
         if len(self.picking_ids) == 1:
-            so_count = self.partner_id.sale_order_count
-            if so_count == 1:
-                print("worlimmnad adssssssssssssssss")
+            all_child = self.env["res.partner"].with_context(active_test=False).search([('id', 'child_of', self.partner_id.ids)])
+            so = self.env["sale.order"].serach([("partner_id", "in", all_child.ids)])
+            so_count = len(so.filtered(lambda x:x.state=='sale'))
+            if so_count < 2:
                 try:
                     self.picking_ids.create_delhivery_order()
                 except:
                     pass
+
 
 
     state_id = fields.Many2one('res.country.state', string='State', related='partner_id.state_id')
