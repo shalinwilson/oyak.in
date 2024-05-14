@@ -7,7 +7,7 @@ class SaleOrder(models.Model):
     payment_type = fields.Selection([
         ('cod', "COD"),
         ('Pre_paid', 'Pre-Paid'),
-    ], string='Payment-Type', compute='_compute_payment_type')
+    ], string='Payment-Type', compute='_compute_payment_type',store=1)
 
     def _get_tracking_number(self):
         for rec in self:
