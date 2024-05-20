@@ -218,6 +218,8 @@ class StockPicking(models.Model):
         for item in self.move_ids_without_package:
             weight += item.product_id.weight * item.product_uom_qty
             product_name += item.product_id.display_name
+            if item.product_uom_qty > 1:
+                product_name += str(item.product_uom_qty)
         phone = self.partner_id.mobile or self.partner_id.phone
         phone = phone.replace(' ', '')
         data = {

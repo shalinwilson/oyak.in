@@ -16,9 +16,12 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-<!--             <xpath expr="//field[@name='other_information']//field[@name='invoice_status']" position="after">-->
-<!--                 <field name="payment_type"/>-->
+<!--             <xpath expr="//field[@name='authorized_transaction_ids']" position="after">-->
+<!--                <button name="return_delivery" string="Return Shipment" type="object"/>-->
 <!--             </xpath>-->
+            <xpath expr="//field[@name='authorized_transaction_ids']" position="after">
+                <button name="rto_order" string="RTO" type="object"/>
+             </xpath>
             <field name="analytic_account_id" position="after">
             </field>
             <field name="payment_term_id" position="after">

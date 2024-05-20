@@ -8,7 +8,7 @@ class SaleOrder(models.Model):
         ('cod', "COD"),
         ('Pre_paid', 'Pre-Paid'),
     ], string='Payment-Type', compute='_compute_payment_type',store=1)
-
+    state = fields.Selection(selection_add=[('rto', 'RTO order')])
     def _get_tracking_number(self):
         for rec in self:
             for picking in rec.picking_ids:
@@ -32,6 +32,26 @@ class SaleOrder(models.Model):
                     self.picking_ids.create_delhivery_order()
                 except:
                     pass
+
+    def return_delivery(self):
+        print("wprkig")
+        pickings = self.picking_ids.filtered(lambda x:x.waybill != False)
+        if len(pickings) == 1:
+            action = self.env.ref('stock.act_stock_return_picking').read()[0]
+            print('return',action)
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': action['res_model'],
+                'view_mode': action['view_mode'],
+                'views': [(False, action['view_id'])],
+                'target': 'new',
+                'context': {},  # You can add context if needed
+                'res_id': pickings.id,
+            }
+    def rto_order(self):
+        self.state = 'cancel'
+        self.state = 'rto'
+
 
 
 
