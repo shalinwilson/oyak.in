@@ -19,6 +19,7 @@
         'reports/reports.xml',
         'reports/waybill_slip.xml',
         'views/stock_move.xml',
+        'views/cod_details.xml',
         'data/pincode_crone.xml',
     ],
     'images': ['static/description/banner.png','static/src/img/delhiverylogo.png'],

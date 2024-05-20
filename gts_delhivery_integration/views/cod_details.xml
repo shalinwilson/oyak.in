@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_cod_so" model="ir.actions.server">
+            <field name="name">Link SO</field>
+            <field name="model_id" ref="gts_delhivery_integration.model_delhivery_cod"/>
+            <field name="binding_model_id" ref="gts_delhivery_integration.model_delhivery_cod"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">
+                    for rec in records:
+                        action = rec.sync_so()
+            </field>
+        </record>
+
+    <record id="cod_details_view_form" model="ir.ui.view">
+        <field name="name">cod_details_view_form</field>
+        <field name="model">delhivery.cod</field>
+        <field name="arch" type="xml">
+            <form string="Cod of Delhivery">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="so_id"/>
+                            <field name="cod_amount"/>
+                            <field name="tracking_number"/>
+                        </group>
+                        <group>
+
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="cod_delhivery_view_tree" model="ir.ui.view">
+        <field name="name">cod_delhivery_view_tree</field>
+        <field name="model">delhivery.cod</field>
+        <field name="arch" type="xml">
+            <tree string="cod_delhivery_tree">
+                <field name="name"/>
+                <field name="so_id"/>
+                <field name="cod_amount"/>
+                <field name="tracking_number"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="cod_action" model="ir.actions.act_window">
+        <field name="name">COD order settlements</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">delhivery.cod</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="cod_orders" name="COD DETAILS" parent="website_sale.menu_ecommerce_settings" action="cod_action" sequence="10"/>
+</odoo>

@@ -28,6 +28,7 @@
                                 <field name="call_detail"/>
                                 <field name="payment_type"/>
                <field name="tracking_number"/>
+               <field name="cod_collected"/>
 
             </field>
         </field>
@@ -39,6 +40,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='invoice_status']" position="after">
+               <field name="cod_collected"/>
                <field name="call_detail"/>
                <field name="tracking_number"/>
             </xpath>

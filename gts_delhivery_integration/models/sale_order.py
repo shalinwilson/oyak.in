@@ -9,6 +9,8 @@ class SaleOrder(models.Model):
         ('Pre_paid', 'Pre-Paid'),
     ], string='Payment-Type', compute='_compute_payment_type',store=1)
     state = fields.Selection(selection_add=[('rto', 'RTO order')])
+    cod_collected = fields.Float('Amount Collected')
+
     def _get_tracking_number(self):
         for rec in self:
             for picking in rec.picking_ids:

@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_delhivey_configuration,access.delivery.configuration.user,gts_delhivery_integration.model_delivery_configuration,,1,1,1,1
 access_pickup_config,access.delivery.configuration.user1,gts_delhivery_integration.model_pickup_request,,1,1,1,1
 access_service_pincode,access.delivery.service.pincode,gts_delhivery_integration.model_service_pincode,,1,1,1,1
+access_delhivery_cod,access.delivery.delhivery.cod,gts_delhivery_integration.model_delhivery_cod,,1,1,1,1
