@@ -7,8 +7,7 @@
         <field name="arch" type="xml">
             <button name="action_confirm" position="after">
                 <button name="create_delhivery_order" string="Generate Delhivery Slip" type="object"
-                        class="oe_highlight"
-                        attrs="{'invisible' : ['|',('state','!=','done'),('carrier_tracking_ref','!=',False)]}"/>
+                        class="oe_highlight"/>
                 <button name="print_slip" string="Print Shipping Label" type="object" class="oe_highlight" attrs="{'invisible' : ['|','|', ('carrier_tracking_ref', '=', False), ('cancelled', '=', True),('state','!=','done')]}"/>
 <!--                TODO:-->
                                 <button name="generate_slip" string="Generate Slip" type="object" class="oe_highlight"/>
@@ -59,7 +58,7 @@
                         <group name="picking_type" string="Waybill Details">
                             <field name="created_by" readonly="1"/>
                             <field name="created_date" readonly="1"/>
-                            <field name="waybill" readonly="1"/>
+                            <field name="waybill" readonly="0"/>
                         </group>
                         <group name="picking_type_code" string="Order Pickup Response">
                             <field name="picking" readonly="1"/>

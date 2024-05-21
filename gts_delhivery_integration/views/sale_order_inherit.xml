@@ -44,6 +44,9 @@
                <field name="call_detail"/>
                <field name="tracking_number"/>
             </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner_mobile"/>
+            </xpath>
 
         </field>
     </record>

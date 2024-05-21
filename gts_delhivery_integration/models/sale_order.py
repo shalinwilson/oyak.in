@@ -10,6 +10,12 @@ class SaleOrder(models.Model):
     ], string='Payment-Type', compute='_compute_payment_type',store=1)
     state = fields.Selection(selection_add=[('rto', 'RTO order')])
     cod_collected = fields.Float('Amount Collected')
+    @api.depends('partner_id')
+    def get_mobile_num(self):
+        for rec in self:
+            rec.partner_mobile = rec.partner_id.phone or rec.partner_id.mobile
+
+    partner_mobile = fields.Char(compute="get_mobile_num")
 
     def _get_tracking_number(self):
         for rec in self:
