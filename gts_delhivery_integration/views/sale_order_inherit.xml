@@ -25,6 +25,7 @@
             <field name="analytic_account_id" position="after">
             </field>
             <field name="payment_term_id" position="after">
+                <field name="partner_mobile"/>
                                 <field name="call_detail"/>
                                 <field name="payment_type"/>
                <field name="tracking_number"/>

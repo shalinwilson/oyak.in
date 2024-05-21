@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="razorpay_actions_sync" model="ir.actions.server">
+            <field name="name">Link SO</field>
+            <field name="model_id" ref="gts_delhivery_integration.model_razorpay_amount"/>
+            <field name="binding_model_id" ref="gts_delhivery_integration.model_razorpay_amount"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">
+                    for rec in records:
+                        action = rec.sync_so()
+            </field>
+        </record>
+
+     <record id="razorpay_view_form" model="ir.ui.view">
+        <field name="name">razorpay.amount</field>
+        <field name="model">razorpay.amount</field>
+        <field name="arch" type="xml">
+            <form string="Razorpay Amount">
+                <sheet>
+                    <group>
+                        <group>
+                           <field name="name"/>
+                <field name="so_id"/>
+                <field name="credit"/>
+                        </group>
+                        <group>
+
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+     <record id="razorpay_view_tree" model="ir.ui.view">
+        <field name="name">cod_delhivery_view_tree</field>
+        <field name="model">razorpay.amount</field>
+        <field name="arch" type="xml">
+            <tree string="razorpay.amount_tree">
+                <field name="name"/>
+                <field name="so_id"/>
+                <field name="credit"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="razorpay_action" model="ir.actions.act_window">
+        <field name="name">Razorpay settlements</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">razorpay.amount</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="razorpay_action_menu" name="Razorpay DETAILS" parent="website_sale.menu_ecommerce_settings" action="razorpay_action" sequence="10"/>
+
+</odoo>

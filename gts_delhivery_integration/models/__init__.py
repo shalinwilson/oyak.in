@@ -9,3 +9,4 @@ from . import pickup
 from . import service_pincode
 from . import contry_restrict_website
 from . import delhivery_cod_details
+from . import razor_payments
