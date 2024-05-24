@@ -19,6 +19,7 @@ class SaleOrder(models.Model):
 
     partner_mobile = fields.Char(compute="get_mobile_num")
 
+    @api.depends('picking_ids')
     def _get_tracking_number(self):
         for rec in self:
             for picking in rec.picking_ids:
@@ -69,7 +70,7 @@ class SaleOrder(models.Model):
     state_id = fields.Many2one('res.country.state', string='State', related='partner_id.state_id')
     city = fields.Char('City', related='partner_id.city')
     zip = fields.Char('ZIP', related='partner_id.zip')
-    tracking_number = fields.Char(compute="_get_tracking_number")
+    tracking_number = fields.Char(compute="_get_tracking_number",store=True)
     call_detail = fields.Selection(
         string='Call Detail',
         selection=[('confirm', 'Confirmed'),
