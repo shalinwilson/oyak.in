@@ -53,4 +53,37 @@
 
         </field>
     </record>
+    <record id="view_sale_order_tree_view" model="ir.ui.view">
+        <field name="name">so_view_tree</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <tree string="so_tree">
+                <field name="name"/>
+                <field name="partner_id"/>
+                 <field name="partner_mobile"/>
+                <field name="call_detail"/>
+                <field name="tracking_number"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <!-- Define the action for the menu item -->
+    <record id="action_view_sale_orders" model="ir.actions.act_window">
+        <field name="name">Sale Orders</field>
+        <field name="res_model">sale.order</field>
+
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+        <field name="view_id" ref="view_sale_order_tree_view"/>
+        <field name="domain">[('tracking_number','=',False)]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Click to see Sale Orders</p>
+        </field>
+    </record>
+     <menuitem id="menu_sale_order_tree_view"
+              name="Kenz View"
+              sequence="10"
+              parent="website_sale.menu_orders"
+              action="action_view_sale_orders"/>
 </odoo>
