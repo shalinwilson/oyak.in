@@ -70,7 +70,7 @@ class SaleOrder(models.Model):
     state_id = fields.Many2one('res.country.state', string='State', related='partner_id.state_id')
     city = fields.Char('City', related='partner_id.city')
     zip = fields.Char('ZIP', related='partner_id.zip')
-    tracking_number = fields.Char(compute="_get_tracking_number",store=True)
+    tracking_number = fields.Char(compute="_get_tracking_number")
     call_detail = fields.Selection(
         string='Call Detail',
         selection=[('confirm', 'Confirmed'),
