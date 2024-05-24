@@ -7,11 +7,12 @@ class SaleOrder(models.Model):
     payment_type = fields.Selection([
         ('cod', "COD"),
         ('Pre_paid', 'Pre-Paid'),
-    ], string='Payment-Type', compute='_compute_payment_type',store=1)
+    ], string='Payment-Type', compute='_compute_payment_type', store=1)
     state = fields.Selection(selection_add=[('rto', 'RTO order')])
     is_rto_order = fields.Boolean("RTO")
-    cod_collected = fields.Float('Amount Collected',tracking=True)
+    cod_collected = fields.Float('Amount Collected', tracking=True)
     amount_refunded = fields.Float(tracking=True)
+
     @api.depends('partner_id')
     def get_mobile_num(self):
         for rec in self:
@@ -32,12 +33,14 @@ class SaleOrder(models.Model):
                     rec.tracking_number = ''
             if not rec.picking_ids:
                 rec.tracking_number = ''
+
     def make_delhivery_order(self):
         if len(self.picking_ids) == 1:
             # all_child = self.env["res.partner"].with_context(active_test=False).search([('id', 'child_of', self.partner_id.ids)])
-            so = self.env["sale.order"].search([("partner_id", "in", self.partner_id.ids),('tracking_number','!=',False)])
+            so = self.env["sale.order"].search(
+                [("partner_id", "in", self.partner_id.ids), ('tracking_number', '!=', False)])
 
-            so_count = len(so.filtered(lambda x:x.state=='sale'))
+            so_count = len(so.filtered(lambda x: x.state == 'sale'))
             if so_count <= 2:
                 try:
                     self.picking_ids.create_delhivery_order()
@@ -46,10 +49,10 @@ class SaleOrder(models.Model):
 
     def return_delivery(self):
         print("wprkig")
-        pickings = self.picking_ids.filtered(lambda x:x.waybill != False)
+        pickings = self.picking_ids.filtered(lambda x: x.waybill != False)
         if len(pickings) == 1:
             action = self.env.ref('stock.act_stock_return_picking').read()[0]
-            print('return',action)
+            print('return', action)
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': action['res_model'],
@@ -59,13 +62,30 @@ class SaleOrder(models.Model):
                 'context': {},  # You can add context if needed
                 'res_id': pickings.id,
             }
+
     def rto_order(self):
 
         self.is_rto_order = True
-    #     todo sent msg
+        #     todo sent msg
+        values = {
+            'body': 'Your order has CAME BACK as delivery partner couldnt deliver it. Please connect us for any query on +91 9995322259',
+            'model': 'sale.order',
+            'message_type': 'email',
+            'res_id': self.id,
+        }
+        self.env['mail.message'].sudo().create(values)
 
-
-
+    @api.onchange('call_detail')
+    def onchange_call_detail(self):
+        if self.call_detail == 'not_connected':
+            values = {
+                'body': 'we could not reach you on your phone for order confirmation '
+                        'Please connect us for order confirmation on +91 9995322259',
+                'model': 'sale.order',
+                'message_type': 'email',
+                'res_id': self.id,
+            }
+            self.env['mail.message'].sudo().create(values)
 
     state_id = fields.Many2one('res.country.state', string='State', related='partner_id.state_id')
     city = fields.Char('City', related='partner_id.city')
@@ -78,7 +98,6 @@ class SaleOrder(models.Model):
                    ('cancel', 'Cancel'),
                    ],
         required=False, tracking=True)
-
 
     @api.depends('order_line', 'order_line.product_id')
     def _compute_payment_type(self):
@@ -112,7 +131,6 @@ class SaleReport(models.Model):
     state_id = fields.Many2one('res.country.state', 'State')
     city = fields.Char('City')
     zip = fields.Char('ZIP')
-
 
     # def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
     #     fields['state_id'] = ", partner.state_id"
