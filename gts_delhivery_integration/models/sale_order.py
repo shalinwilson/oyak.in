@@ -9,6 +9,7 @@ class SaleOrder(models.Model):
         ('Pre_paid', 'Pre-Paid'),
     ], string='Payment-Type', compute='_compute_payment_type',store=1)
     state = fields.Selection(selection_add=[('rto', 'RTO order')])
+    is_rto_order = fields.Boolean("RTO")
     cod_collected = fields.Float('Amount Collected',tracking=True)
     amount_refunded = fields.Float(tracking=True)
     @api.depends('partner_id')
@@ -58,8 +59,9 @@ class SaleOrder(models.Model):
                 'res_id': pickings.id,
             }
     def rto_order(self):
-        self.state = 'cancel'
-        self.state = 'rto'
+
+        self.is_rto_order = True
+    #     todo sent msg
 
 
 

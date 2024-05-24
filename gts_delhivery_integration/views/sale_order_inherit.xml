@@ -29,6 +29,7 @@
                                 <field name="call_detail"/>
                                 <field name="payment_type"/>
                <field name="tracking_number"/>
+                <field name="is_rto_order"/>
                <field name="cod_collected"/>
                <field name="amount_refunded"/>
 
