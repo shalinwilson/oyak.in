@@ -16,10 +16,11 @@ class SaleOrder(models.Model):
     @api.depends('payment_type','tracking_number')
     def _get_danger(self):
         for rec in self:
-            if rec.payment_type == 'Pre_paid' and rec.tracking_number == '':
+            if rec.payment_type == 'Pre_paid' and (rec.tracking_number == '' or rec.is_rto_order == True):
                 rec.danger = True
             else:
                 rec.danger = False
+
 
     danger = fields.Float("prepaid not sent",compute='_get_danger')
     @api.depends('partner_id')
