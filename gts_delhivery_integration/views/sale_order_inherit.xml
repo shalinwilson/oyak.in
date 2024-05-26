@@ -51,8 +51,9 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="partner_mobile"/>
+                  <field name="danger" invisible="1"/>
             </xpath>
-                            <field name="danger" invisible="1"/>
+
 
              <xpath expr="//tree" position="attributes">
                     <attribute name="decoration-danger">danger == True</attribute>
