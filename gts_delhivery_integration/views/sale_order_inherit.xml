@@ -22,6 +22,7 @@
             <xpath expr="//field[@name='authorized_transaction_ids']" position="after">
                 <button name="rto_order" string="RTO" type="object"/>
              </xpath>
+
             <field name="analytic_account_id" position="after">
             </field>
             <field name="payment_term_id" position="after">
@@ -34,6 +35,7 @@
                <field name="amount_refunded"/>
 
             </field>
+
         </field>
     </record>
     <record id="tracking_in_so" model="ir.ui.view">
@@ -49,6 +51,11 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="partner_mobile"/>
+            </xpath>
+                            <field name="danger" invisible="1"/>
+
+             <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">danger == True</attribute>
             </xpath>
 
         </field>
