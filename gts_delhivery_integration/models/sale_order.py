@@ -22,7 +22,7 @@ class SaleOrder(models.Model):
                 rec.danger = False
 
 
-    danger = fields.Float("prepaid not sent",compute='_get_danger')
+    danger = fields.Boolean("prepaid not sent",compute='_get_danger')
     @api.depends('partner_id')
     def get_mobile_num(self):
         for rec in self:
