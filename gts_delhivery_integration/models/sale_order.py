@@ -85,17 +85,19 @@ class SaleOrder(models.Model):
         }
         self.env['mail.message'].sudo().create(values)
 
-    @api.onchange('call_detail')
-    def onchange_call_detail(self):
-        if self.call_detail == 'not_connected':
-            values = {
-                'body': 'we could not reach you on your phone for order confirmation '
-                        'Please connect us for order confirmation on +91 9995322259',
-                'model': 'sale.order',
-                'message_type': 'email',
-                'res_id': self.id,
-            }
-            self.env['mail.message'].sudo().create(values)
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        if 'call_detail' in vals and vals['call_detail'] == 'not_connected':
+            for order in self:
+                values = {
+                    'body': 'we could not reach you on your phone for order confirmation. '
+                            'Please connect us for order confirmation on +91 9995322259',
+                    'model': 'sale.order',
+                    'message_type': 'email',
+                    'res_id': order.id,
+                }
+                self.env['mail.message'].sudo().create(values)
+        return res
 
     state_id = fields.Many2one('res.country.state', string='State', related='partner_id.state_id')
     city = fields.Char('City', related='partner_id.city')
