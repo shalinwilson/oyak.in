@@ -149,10 +149,14 @@
                     <group name="sale_header">
                         <group>
                             <field name="partner_id" nolabel="1"/>
+                            <field name="partner_mobile" nolabel="1"/>
 
-                            <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" invisible="1"
+
+                            <field name="partner_invoice_id" groups="account.group_delivery_invoice_address"
+                                   invisible="1"
                                    context="{'default_type':'invoice'}" options="{&quot;always_reload&quot;: True}"/>
-                            <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" invisible="1"
+                            <field name="partner_shipping_id" groups="account.group_delivery_invoice_address"
+                                   invisible="1"
                                    context="{'default_type':'delivery'}" options="{&quot;always_reload&quot;: True}"/>
 
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
@@ -182,7 +186,6 @@
                             <field name="pricelist_id" invisible="1" groups="!product.group_product_pricelist"/>
                             <field name="tax_country_id" invisible="1"/>
                             <field name="payment_term_id" options="{'no_open':True,'no_create': True}" invisible="1"/>
-                            <field name="partner_mobile" nolabel="1"/>
                             <field name="call_detail"/>
                             <field name="payment_type" nolabel="1"/>
                             <field name="tracking_number" nolabel="1"/>
