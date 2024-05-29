@@ -149,9 +149,7 @@
                     <group name="sale_header">
                         <group name="partner_details">
 
-                            <field name="partner_id" widget="res_partner_many2one"
-                                   context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
-                                   options="{&quot;always_reload&quot;: True}"/>
+                            <field name="partner_id"/>
 
                             <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" invisible="1"
                                    context="{'default_type':'invoice'}" options="{&quot;always_reload&quot;: True}"/>
@@ -174,7 +172,7 @@
                             <field name="show_update_pricelist" invisible="1"/>
                             <label for="pricelist_id" groups="product.group_product_pricelist"/>
                             <div groups="product.group_product_pricelist" class="o_row">
-                                <field name="pricelist_id" options="{'no_open':True,'no_create': True}"/>
+                                <field name="pricelist_id" options="{'no_open':True,'no_create': True}" invisible="1"/>
                                 <button name="action_update_prices" type="object" string=" Update Prices"
                                         help="Recompute all prices based on this pricelist" class="btn-link mb-1 px-0"
                                         icon="fa-refresh"
@@ -186,6 +184,7 @@
                             <field name="pricelist_id" invisible="1" groups="!product.group_product_pricelist"/>
                             <field name="tax_country_id" invisible="1"/>
                             <field name="payment_term_id" options="{'no_open':True,'no_create': True}" invisible="1"/>
+                            <field name="partner_mobile"/>
                             <field name="call_detail"/>
                             <field name="payment_type"/>
                             <field name="tracking_number"/>
