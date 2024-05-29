@@ -148,7 +148,7 @@
                     </div>
                     <group name="sale_header">
                         <group>
-                            <field name="partner_id"/>
+                            <field name="partner_id" nolabel="1"/>
 
                             <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" invisible="1"
                                    context="{'default_type':'invoice'}" options="{&quot;always_reload&quot;: True}"/>
@@ -158,12 +158,12 @@
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
                             <div class="o_td_label" groups="base.group_no_one"
                                  attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
-                                <label for="date_order" string="Quotation Date"/>
+
                             </div>
-                            <field name="date_order" nolabel="1" groups="base.group_no_one"
-                                   attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                            <field name="date_order" groups="base.group_no_one"
+                                   attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}" nolabel="1"/>
                             <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}">
-                                <label for="date_order" string="Order Date"/>
+
                             </div>
                             <field name="date_order" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}"
                                    nolabel="1"/>
@@ -182,10 +182,10 @@
                             <field name="pricelist_id" invisible="1" groups="!product.group_product_pricelist"/>
                             <field name="tax_country_id" invisible="1"/>
                             <field name="payment_term_id" options="{'no_open':True,'no_create': True}" invisible="1"/>
-                            <field name="partner_mobile"/>
+                            <field name="partner_mobile" nolabel="1"/>
                             <field name="call_detail"/>
-                            <field name="payment_type"/>
-                            <field name="tracking_number"/>
+                            <field name="payment_type" nolabel="1"/>
+                            <field name="tracking_number" nolabel="1"/>
                         </group>
                     </group>
                     <notebook>
