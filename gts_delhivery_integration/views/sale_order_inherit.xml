@@ -147,16 +147,14 @@
                         </h1>
                     </div>
                     <group name="sale_header">
-                        <group name="partner_details">
-
+                        <group>
                             <field name="partner_id"/>
 
                             <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" invisible="1"
                                    context="{'default_type':'invoice'}" options="{&quot;always_reload&quot;: True}"/>
                             <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" invisible="1"
                                    context="{'default_type':'delivery'}" options="{&quot;always_reload&quot;: True}"/>
-                        </group>
-                        <group name="order_details">
+
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
                             <div class="o_td_label" groups="base.group_no_one"
                                  attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
