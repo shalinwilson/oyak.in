@@ -13,6 +13,14 @@ class SaleOrder(models.Model):
     cod_collected = fields.Float('Amount Collected', tracking=True)
     amount_refunded = fields.Float(tracking=True)
 
+    def get_delivery_cost(self):
+        for rec in self:
+            cost = 0.0
+            for picking in rec.picking_ids:
+                cost += picking.delhivery_expense
+            rec.delhivery_cost = cost
+
+    delhivery_cost = fields.Float(compute="get_delivery_cost")
     @api.depends('payment_type','tracking_number')
     def _get_danger(self):
         for rec in self:

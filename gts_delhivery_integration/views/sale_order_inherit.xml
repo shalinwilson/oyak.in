@@ -33,6 +33,7 @@
                 <field name="is_rto_order"/>
                 <field name="cod_collected"/>
                 <field name="amount_refunded"/>
+                <field name="delhivery_cost"/>
 
             </field>
 
