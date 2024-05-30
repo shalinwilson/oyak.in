@@ -3,4 +3,5 @@ access_delhivey_configuration,access.delivery.configuration.user,gts_delhivery_i
 access_pickup_config,access.delivery.configuration.user1,gts_delhivery_integration.model_pickup_request,,1,1,1,1
 access_service_pincode,access.delivery.service.pincode,gts_delhivery_integration.model_service_pincode,,1,1,1,1
 access_delhivery_cod,access.delivery.delhivery.cod,gts_delhivery_integration.model_delhivery_cod,,1,1,1,1
+access_delhivery_exp,access.delivery.delhivery.exp,gts_delhivery_integration.model_delhivery_exp,,1,1,1,1
 access_razorpay_amount,access.delivery.razorpay_amount,gts_delhivery_integration.model_razorpay_amount,,1,1,1,1

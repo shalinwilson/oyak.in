@@ -20,6 +20,7 @@
         'reports/waybill_slip.xml',
         'views/stock_move.xml',
         'views/cod_details.xml',
+        'views/delhivery_expenses.xml',
         'views/razorpay_amount.xml',
         'data/pincode_crone.xml',
     ],
