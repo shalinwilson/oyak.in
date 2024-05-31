@@ -21,7 +21,7 @@
 <!--            atr c-->
             <field name="location_id" position="before">
                 <field name="payment_type"/>
-                <field name="delhivery_expense"/>
+<!--                <field name="delhivery_expense"/>-->
             </field>
             <field name="location_id" position="attributes">
                 <attribute name="invisible">1</attribute>
