@@ -27,13 +27,18 @@ class DelhiveryExp(models.Model):
     tracking_number = fields.Char('AWB')
     transaction_id = fields.Char()
     is_rto = fields.Boolean()
+    shipment_status = fields.Char()
+    sync = fields.Boolean()
     def sync_so(self):
         picking = self.env['stock.picking'].search([('waybill','=',self.tracking_number)],limit=1)
-        if not picking:
-            self.is_rto = True
-            picking.delhivery_expense += self.exp_amount
-        else:
-            picking.delhivery_expense += self.exp_amount
+        if not self.sync:
+            if not picking:
+                self.is_rto = True
+                picking.delhivery_expense += self.exp_amount
+                self.sync = True
+            else:
+                picking.delhivery_expense += self.exp_amount
+                self.sync = True
 
     _sql_constraints = [
         ('transactions_exp_uniq', 'unique(transaction_id)','The transaction should be unique'),

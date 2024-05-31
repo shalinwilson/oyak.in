@@ -39,6 +39,7 @@
                 <field name="exp_amount"/>
                 <field name="tracking_number"/>
                 <field name="is_rto"/>
+                <field name="sync"/>
             </tree>
         </field>
     </record>

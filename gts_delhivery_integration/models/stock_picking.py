@@ -58,7 +58,7 @@ class StockPicking(models.Model):
     msg_feedback = fields.Boolean(default=False)
     pickup_parent_id = fields.Many2one('stock.picking')
     daily_pickup_ids = fields.One2many('stock.picking', 'pickup_parent_id')
-    delhivery_expense = fields.Float()
+    # delhivery_expense = fields.Float()
     # @api.onchange('picking_type_id')
     # def onchange_picking_address(self):
     #     if self.picking_type_id:
