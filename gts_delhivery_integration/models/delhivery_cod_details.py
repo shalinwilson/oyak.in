@@ -25,6 +25,7 @@ class DelhiveryExp(models.Model):
 
     exp_amount = fields.Float('Miles or amount')
     tracking_number = fields.Char('AWB')
+    transaction_id = fields.Char()
 
     def sync_so(self):
         picking = self.env['stock.picking'].search([('waybill','=',self.tracking_number)],limit=1)
@@ -32,3 +33,7 @@ class DelhiveryExp(models.Model):
             raise UserError(_("couldnt find picking for %s",self.tracking_number))
         else:
             picking.delhivery_expense += self.exp_amount
+
+    _sql_constraints = [
+        ('transactions_exp_uniq', 'unique(transaction_id)','The transaction should be unique'),
+    ]
