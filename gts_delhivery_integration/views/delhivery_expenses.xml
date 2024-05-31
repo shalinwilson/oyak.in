@@ -38,6 +38,7 @@
             <tree string="exp_delhivery_tree">
                 <field name="exp_amount"/>
                 <field name="tracking_number"/>
+                <field name="is_rto"/>
             </tree>
         </field>
     </record>

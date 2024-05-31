@@ -26,11 +26,12 @@ class DelhiveryExp(models.Model):
     exp_amount = fields.Float('Miles or amount')
     tracking_number = fields.Char('AWB')
     transaction_id = fields.Char()
-
+    is_rto = fields.Boolean()
     def sync_so(self):
         picking = self.env['stock.picking'].search([('waybill','=',self.tracking_number)],limit=1)
         if not picking:
-            raise UserError(_("couldnt find picking for %s",self.tracking_number))
+            self.is_rto = True
+            picking.delhivery_expense += self.exp_amount
         else:
             picking.delhivery_expense += self.exp_amount
 
