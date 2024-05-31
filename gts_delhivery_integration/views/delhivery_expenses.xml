@@ -44,7 +44,7 @@
     </record>
 
     <record id="del_exp_action" model="ir.actions.act_window">
-        <field name="name">COD order settlements</field>
+        <field name="name">Delhivery Settlements</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">delhivery.exp</field>
         <field name="view_mode">tree,form</field>
