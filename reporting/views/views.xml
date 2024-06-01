@@ -1,0 +1,89 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<record id="view_reporting_tree" model="ir.ui.view">
+    <field name="name">reporting.reporting.tree</field>
+    <field name="model">reporting.reporting</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="name"/>
+            <field name="date1"/>
+            <field name="date2"/>
+            <field name="sales_amount_collected"/>
+            <field name="total_orders"/>
+            <field name="cod_prepaid_ratio"/>
+        </tree>
+    </field>
+</record>
+    <record id="view_reporting_form" model="ir.ui.view">
+    <field name="name">reporting.reporting.form</field>
+    <field name="model">reporting.reporting</field>
+    <field name="arch" type="xml">
+        <form string="Reporting">
+             <header>
+                 <button name="calculate_values" string="Calculate" type="object"/>
+             </header>
+            <sheet>
+                 <div class="oe_title">
+                        <div>
+                            <label for="name"/>
+                        </div>
+                        <h1 class="mb32">
+                            <field name="name" class="mb16" readonly="1"/>
+                        </h1>
+                 </div>
+                <group>
+                  <group>
+
+                    <field name="date1"/>
+                    <field name="date2"/>
+                    <field name="sales_amount_collected"/>
+                    <field name="total_amount_refunded"/>
+                    <field name="shipping_cost_total"/>
+                    <field name="total_orders"/>
+                    <field name="calculated_profit"/>
+                  </group>
+                  <group>
+                     <field name="total_cod"/>
+                    <field name="total_prepaid"/>
+                    <field name="cod_prepaid_ratio"/>
+                    <field name="total_rto_orders"/>
+                    <field name="products_total_cost"/>
+                  </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="reporting.action_server">
+      <field name="name">reporting window</field>
+      <field name="res_model">reporting.reporting</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Date Wise Reporting" id="reporting_menu" parent="base_accounting_kit.account_reports_generic_statements"
+              action="reporting.action_server"/>
+
+
+      <!-- Inherit Form View to Modify it -->
+      <record id="product_form_inherit" model="ir.ui.view">
+          <field name="name">product.template.form</field>
+          <field name="model">product.template</field>
+          <field name="inherit_id" ref="product.product_template_only_form_view"/>
+          <field name="arch" type="xml">
+
+              <xpath expr="//div[@name='pricing']" position="after">
+                 <label for="cost_for_reporting" class="mt-1"/>
+                  <div name="cost">
+                      <field name="cost_for_reporting"/>
+                  </div>
+              </xpath>
+
+
+          </field>
+      </record>
+
+
+  </data>
+</odoo>

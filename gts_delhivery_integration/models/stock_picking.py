@@ -58,7 +58,7 @@ class StockPicking(models.Model):
     msg_feedback = fields.Boolean(default=False)
     pickup_parent_id = fields.Many2one('stock.picking')
     daily_pickup_ids = fields.One2many('stock.picking', 'pickup_parent_id')
-    delhivery_expense = fields.Float()
+    delhivery_expense = fields.Float(nocopy=True)
     # @api.onchange('picking_type_id')
     # def onchange_picking_address(self):
     #     if self.picking_type_id:
@@ -124,6 +124,10 @@ class StockPicking(models.Model):
 
     def create_delhivery_order(self):
         data = self.env['sale.order'].search([('name', '=', self.origin)], limit=1)
+        if not data:
+            so_num = self.name.split('-', 1)
+            so_num = so_num[0]
+            data = self.env['sale.order'].search([('name', '=', so_num)], limit=1)
         total_amount = data.amount_total
         warehouse = self.picking_type_id.warehouse_id
         self.cancelled = False
