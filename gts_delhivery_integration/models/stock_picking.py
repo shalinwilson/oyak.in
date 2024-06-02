@@ -476,7 +476,7 @@ class StockPicking(models.Model):
         elif configuration.request_type == 'production':
             url = configuration.production_tracking_url
             api_token = configuration.production_api
-
+        res_dic = {}
         headers = {'Authorization': 'Token' + ' ' + api_token}
         for picking in order_picking:
             data = {
