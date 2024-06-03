@@ -29,13 +29,13 @@
                                 <label for="date1"/>
                             </div>
                             <h1 class="mb32">
-                                <field name="date1" class="mb16" readonly="1"/>
+                                <field name="date1" class="mb16"/>
                             </h1>
                             <div>
                                 <label for="date2"/>
                             </div>
                             <h1 class="mb32">
-                                <field name="date2" class="mb16" readonly="1"/>
+                                <field name="date2" class="mb16"/>
                             </h1>
                         </div>
                         <group>
