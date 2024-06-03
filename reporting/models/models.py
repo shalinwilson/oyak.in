@@ -43,6 +43,7 @@ class reporting(models.Model):
                                                       ('date_order', '<=', end_date),
                                                       ('state', 'not in', ['draft', 'sent', 'cancel'])
                                                       ])
+        so_in_period = so_in_period.filtered(lambda x:x.cod_collected > 0)
         self.total_orders = len(so_in_period.filtered(lambda x: x.is_rto_order == False))
         self.total_cod = len(so_in_period.filtered(lambda self: self.payment_type == 'cod'))
         self.total_prepaid = len(so_in_period.filtered(lambda self: self.payment_type == 'Pre_paid'))
