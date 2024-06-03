@@ -23,7 +23,8 @@ class reporting(models.Model):
     total_prepaid = fields.Integer()
     cod_prepaid_ratio = fields.Float()
     total_rto_orders = fields.Float()
-
+    rto_loss = fields.Float()
+    delivery_payments_total = fields.Float()
     products_total_cost = fields.Float()
 
     calculated_profit = fields.Float()
@@ -37,7 +38,24 @@ class reporting(models.Model):
                                                       ('date_order','<=',end_date),
                                                       ('state','not in',['draft','sent','cancel'])
                                                       ])
-        print("working",so_in_period)
+        self.total_rto_orders = self.env['sale.order'].search_count([('date_order','>=',start_date),
+                                                      ('date_order','<=',end_date),
+                                                          ('is_rto_order','=',True)
+                                                      ])
+        self.rto_loss = sum(self.env['sale.order'].search([('date_order','>=',start_date),
+                                                      ('date_order','<=',end_date),
+                                                          ('is_rto_order','=',True)
+                                                      ]).mapped('delhivery_cost'))
+        delhivery_partner  = self.env['res.partner'].search([('name','=','Delhivery')],limit=1)
+        delhivery_payments = self.env['account.move'].search([('invoice_date','>=',start_date),
+                                                      ('invoice_date','<=',end_date),
+                                                              ('state','=','posted'),
+                                                              ('partner_id','=',delhivery_partner.id),
+                                                              ('move_type','=','out_invoice')
+                                                              ])
+        self.delivery_payments_total = sum(delhivery_payments.mapped('price_total'))
+
+
 
         self.sales_amount_collected = sum(so_in_period.mapped('cod_collected'))
         self.shipping_cost_total = sum(so_in_period.mapped('delhivery_cost'))

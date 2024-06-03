@@ -48,7 +48,9 @@
                     <field name="total_prepaid"/>
                     <field name="cod_prepaid_ratio"/>
                     <field name="total_rto_orders"/>
+                    <field name="rto_loss"/>
                     <field name="products_total_cost"/>
+                    <field name="delivery_payments_total"/>
                   </group>
                 </group>
             </sheet>
