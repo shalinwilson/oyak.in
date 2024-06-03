@@ -35,7 +35,7 @@ class reporting(models.Model):
         print(self.env['sale.order'].browse([1]).date_order)
         so_in_period = self.env['sale.order'].search([('date_order','>=',start_date),
                                                       ('date_order','<=',end_date),
-                                                      ('cod_collected','!=',False),
+                                                      ('state','not in',['draft','sent','cancel'])
                                                       ])
         print("working",so_in_period)
 
@@ -45,8 +45,9 @@ class reporting(models.Model):
 
         products_cost = 0
         for so in so_in_period:
-            for sol in so.order_line:
-                products_cost += (sol.product_id.cost_for_reporting * sol.product_uom_qty)
+            if not so.is_rto_order:
+                for sol in so.order_line:
+                    products_cost += (sol.product_id.cost_for_reporting * sol.product_uom_qty)
 
         self.products_total_cost = products_cost
 
