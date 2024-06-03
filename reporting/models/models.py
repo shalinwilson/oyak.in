@@ -41,7 +41,7 @@ class reporting(models.Model):
         self.total_orders = len(so_in_period.filtered(lambda x: x.is_rto_order == False))
         self.total_cod = len(so_in_period.filtered(lambda self: self.payment_type == 'cod'))
         self.total_prepaid = len(so_in_period.filtered(lambda self: self.payment_type == 'Pre_paid'))
-        self.cod_prepaid_ratio = (self.total_prepaid / self.total_cod) * 100
+        self.cod_prepaid_ratio = (self.total_prepaid / self.total_cod)
         self.total_rto_orders = self.env['sale.order'].search_count([('date_order','>=',start_date),
                                                       ('date_order','<=',end_date),
                                                           ('is_rto_order','=',True),
@@ -51,13 +51,13 @@ class reporting(models.Model):
                                                           ('is_rto_order','=',True)
                                                       ]).mapped('delhivery_cost'))
         delhivery_partner  = self.env['res.partner'].search([('name','=','Delhivery')],limit=1)
-        delhivery_payments = self.env['account.move'].search([('invoice_date','>=',start_date),
-                                                      ('invoice_date','<=',end_date),
+        delhivery_payments = self.env['account.payment'].search([('date','>=',start_date),
+                                                      ('date','<=',end_date),
                                                               ('state','=','posted'),
                                                               ('partner_id','=',delhivery_partner.id),
-                                                              ('move_type','=','out_invoice')
+                                                              ('payment_type','=','outbound')
                                                               ])
-        self.note = delhivery_payments
+        self.note = delhivery_payments + delhivery_partner
         self.delivery_payments_total = sum(delhivery_payments.mapped('amount_total'))
 
 
