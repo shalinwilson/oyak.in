@@ -21,6 +21,7 @@ class reporting(models.Model):
     other_deductions = fields.Float()
     profit_against_collected_amount = fields.Float()
 
+
     total_orders = fields.Integer()
     total_cod = fields.Integer()
     total_prepaid = fields.Integer()
@@ -81,3 +82,4 @@ class reporting(models.Model):
 
         self.profit_against_collected_amount = (self.calculated_profit / (
                     self.sales_amount_collected - self.shipping_cost_total)) * 100
+        self.revenue_pro_percent = (self.calculated_profit / self.sales_amount_collected ) * 100

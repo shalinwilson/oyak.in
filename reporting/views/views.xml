@@ -17,6 +17,7 @@
                      <field name="other_deductions"/>
 
                                 <field name="calculated_profit"/>
+                                <field name="revenue_pro_percent"/>
                      <field name="profit_against_collected_amount"/>
                 </tree>
             </field>
