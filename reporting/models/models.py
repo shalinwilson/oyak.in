@@ -57,7 +57,7 @@ class reporting(models.Model):
                                                               ('partner_id','=',delhivery_partner.id),
                                                               ('payment_type','=','outbound')
                                                               ])
-        self.note = delhivery_payments + delhivery_partner
+        self.note = str(delhivery_payments) + str(delhivery_partner)
         self.delivery_payments_total = sum(delhivery_payments.mapped('amount_total'))
 
 
