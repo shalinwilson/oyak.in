@@ -17,6 +17,7 @@ class reporting(models.Model):
     sales_amount_collected = fields.Float()
     total_amount_refunded = fields.Float()
     shipping_cost_total = fields.Float()
+    other_deductions = fields.Float()
 
     total_orders = fields.Integer()
     total_cod = fields.Integer()
@@ -75,7 +76,7 @@ class reporting(models.Model):
         self.products_total_cost = products_cost
 
         self.calculated_profit = self.sales_amount_collected - (self.shipping_cost_total+self.total_amount_refunded
-                                                                +self.products_total_cost)
+                                                                +self.products_total_cost+self.other_deductions)
 
 
 
