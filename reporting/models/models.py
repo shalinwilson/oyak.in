@@ -40,7 +40,7 @@ class reporting(models.Model):
                                                       ])
         self.total_rto_orders = self.env['sale.order'].search_count([('date_order','>=',start_date),
                                                       ('date_order','<=',end_date),
-                                                          ('is_rto_order','=',True)
+                                                          ('is_rto_order','=',True),
                                                       ])
         self.rto_loss = sum(self.env['sale.order'].search([('date_order','>=',start_date),
                                                       ('date_order','<=',end_date),
@@ -53,7 +53,7 @@ class reporting(models.Model):
                                                               ('partner_id','=',delhivery_partner.id),
                                                               ('move_type','=','out_invoice')
                                                               ])
-        self.delivery_payments_total = sum(delhivery_payments.mapped('price_total'))
+        self.delivery_payments_total = sum(delhivery_payments.mapped('amount_total'))
 
 
 
