@@ -20,7 +20,7 @@ class reporting(models.Model):
     shipping_cost_total = fields.Float()
     other_deductions = fields.Float()
     profit_against_collected_amount = fields.Float()
-
+    revenue_pro_percent = fields.Float()
 
     total_orders = fields.Integer()
     total_cod = fields.Integer()
