@@ -6,12 +6,18 @@
             <field name="model">reporting.reporting</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name"/>
+
                     <field name="date1"/>
                     <field name="date2"/>
                     <field name="sales_amount_collected"/>
+                                <field name="total_amount_refunded"/>
+                                <field name="shipping_cost_total"/>
                     <field name="total_orders"/>
                     <field name="cod_prepaid_ratio"/>
+                     <field name="other_deductions"/>
+
+                                <field name="calculated_profit"/>
+                     <field name="profit_against_collected_amount"/>
                 </tree>
             </field>
         </record>
@@ -49,6 +55,8 @@
                                 <field name="other_deductions"/>
 
                                 <field name="calculated_profit"/>
+                                <field name="profit_against_collected_amount"/>
+
                             </group>
                             <group>
                                 <field name="total_orders"/>
