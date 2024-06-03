@@ -28,7 +28,7 @@ class reporting(models.Model):
     products_total_cost = fields.Float()
 
     calculated_profit = fields.Float()
-
+    note = fields.Char()
     def calculate_values(self):
         print("working")
         start_date = fields.Datetime.to_string(self.date1)
@@ -38,6 +38,10 @@ class reporting(models.Model):
                                                       ('date_order','<=',end_date),
                                                       ('state','not in',['draft','sent','cancel'])
                                                       ])
+        self.total_orders = len(so_in_period.filtered(lambda x: x.is_rto_order == False))
+        self.total_cod = len(so_in_period.filtered(lambda self: self.payment_type == 'cod'))
+        self.total_prepaid = len(so_in_period.filtered(lambda self: self.payment_type == 'Pre_paid'))
+        self.cod_prepaid_ratio = (self.total_prepaid / self.total_cod) * 100
         self.total_rto_orders = self.env['sale.order'].search_count([('date_order','>=',start_date),
                                                       ('date_order','<=',end_date),
                                                           ('is_rto_order','=',True),
@@ -53,6 +57,7 @@ class reporting(models.Model):
                                                               ('partner_id','=',delhivery_partner.id),
                                                               ('move_type','=','out_invoice')
                                                               ])
+        self.note = delhivery_payments
         self.delivery_payments_total = sum(delhivery_payments.mapped('amount_total'))
 
 
