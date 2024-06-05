@@ -12,11 +12,10 @@
                                 <div class="col-lg-8">
                                     <div class="alert alert-success" role="status">
                                         Your order for return has been sent successfully.
+                                        We will call you for confirmation
                                         <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
                                     </div>
-                                    <p>
-                                        We will get back to you shortly.
-                                    </p>
+                                    <a href="/shop">continue shopping</a>
                                 </div>
                             </div>
                         </div>

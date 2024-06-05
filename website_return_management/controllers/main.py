@@ -24,7 +24,35 @@
 from odoo.addons.website.controllers import main
 from datetime import datetime
 from odoo import http
+from odoo.exceptions import UserError
 from odoo.http import request
+
+
+class SaleOrderController(http.Controller):
+    @http.route('/cancel_order', type='json', auth='public',website=True)
+    def cancel_order(self, **kwargs):
+        try:
+            # Fetch the sale order by its ID
+            order_id = kwargs.get('order_id')
+            order = request.env['sale.order'].sudo().browse(order_id)
+            print(order)
+            # Check if the order has a tracking number
+            if order.tracking_number:
+                # If the order has a tracking number, raise a UserError
+                return {'success': False, 'error': ' Item Already shipped'}
+            print(order)
+            print("working")
+            # Cancel the sale order
+            order.with_context({'disable_cancel_warning': True}).action_cancel()
+            order.user_cancelled = True
+            print(order.state)
+
+            # Return success response
+            return {'success': True, 'message': 'Order canceled successfully'}
+        except UserError as e:
+            return {'success': False, 'error': str(e)}
+        except Exception as e:
+            return {'success': False, 'error': 'An error occurred while canceling the order'}
 
 
 class CustomerRegistration(main.Home):
@@ -46,14 +74,16 @@ class CustomerRegistration(main.Home):
             'user_id': request.env.uid,
             'create_date': datetime.now(),
         }
-        stock_picks = request.env['stock.picking'].search([('origin', '=', order.name)])
-        moves = stock_picks.mapped('move_ids_without_package').with_user(1).filtered(lambda p: p.product_id == product_id)
-        if moves:
-            moves = moves.sorted('product_uom_qty', reverse=True)
-            values.update({'state': 'draft'})
-            ret_order = request.env['sale.return'].with_user(1).create(values)
-            moves[0].picking_id.return_order = ret_order.id
-            moves[0].picking_id.return_order_picking = False
+        # stock_picks = request.env['stock.picking'].search([('origin', '=', order.name)])
+        # moves = stock_picks.mapped('move_ids_without_package').with_user(1).filtered(
+        #     lambda p: p.product_id == product_id)
+        # if moves:
+        #     moves = moves.sorted('product_uom_qty', reverse=True)
+        values.update({'state': 'draft'})
+        ret_order = request.env['sale.return'].with_user(1).create(values)
+        order.is_user_returned = True
+            # moves[0].picking_id.return_order = ret_order.id
+            # moves[0].picking_id.return_order_picking = False
         return request.redirect('/my/request-thank-you')
 
     @http.route('/my/request-thank-you', website=True, page=True, auth='public', csrf=False)

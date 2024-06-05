@@ -13,13 +13,13 @@
         </xpath>
 
         <xpath expr="//div[@id='informations']" position="inside">
-            <t t-if="not sale_order.tracking_number">
-                <div>
-                     <a href="https://wa.me/919995322259" class="btn btn-primary" role="button" target="_blank">Whatsapp </a>
-                    <strong>  us to cancel this order</strong>
+<!--            <t t-if="not sale_order.tracking_number">-->
+<!--                <div>-->
+<!--                     <a href="https://wa.me/919995322259" class="btn btn-primary" role="button" target="_blank">Whatsapp </a>-->
+<!--                    <strong>  us to cancel this order</strong>-->
 
-                </div>
-            </t>
+<!--                </div>-->
+<!--            </t>-->
         </xpath>
 
         <xpath expr="//div[@id='informations']" position="inside">

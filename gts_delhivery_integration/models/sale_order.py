@@ -111,6 +111,8 @@ class SaleOrder(models.Model):
     city = fields.Char('City', related='partner_id.city')
     zip = fields.Char('ZIP', related='partner_id.zip')
     tracking_number = fields.Char(compute="_get_tracking_number")
+    user_cancelled = fields.Boolean()
+    is_user_returned = fields.Boolean()
     call_detail = fields.Selection(
         string='Call Detail',
         selection=[('confirm', 'Confirmed'),

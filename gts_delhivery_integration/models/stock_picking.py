@@ -128,6 +128,7 @@ class StockPicking(models.Model):
             so_num = self.name.split('-', 1)
             so_num = so_num[0]
             data = self.env['sale.order'].search([('name', '=', so_num)], limit=1)
+
         total_amount = data.amount_total
         warehouse = self.picking_type_id.warehouse_id
         self.cancelled = False
