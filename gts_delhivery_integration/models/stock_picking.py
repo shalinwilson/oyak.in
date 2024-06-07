@@ -125,7 +125,7 @@ class StockPicking(models.Model):
     def create_delhivery_order(self):
         data = self.env['sale.order'].search([('name', '=', self.origin)], limit=1)
         if not data:
-            so_num = self.name.split('-', 1)
+            so_num = self.origin.split('-', 1)
             so_num = so_num[0]
             data = self.env['sale.order'].search([('name', '=', so_num)], limit=1)
 

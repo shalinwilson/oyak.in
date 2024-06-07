@@ -138,6 +138,10 @@
                                 icon="fa-pencil-square-o" attrs="{'invisible': [('invoice_count', '=', 0)]}">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
                         </button>
+                        <button type="object" name="action_view_delivery" class="oe_stat_button" icon="fa-truck"
+                                attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="stock.group_stock_user">
+                            <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                        </button>
                         <button name="action_preview_sale_order" type="object" class="oe_stat_button"
                                 icon="fa-globe icon">
                             <div class="o_field_widget o_stat_info">
