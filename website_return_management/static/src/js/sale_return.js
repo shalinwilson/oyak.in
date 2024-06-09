@@ -13,7 +13,7 @@ odoo.define('website_return_management.return', function (require) {
                 .then(function(result) {
                     if (result.success) {
                         // Order canceled successfully, perform necessary actions
-                        alert('Order canceled successfully');
+                        alert('Order canceled successfully, if its prepaid order, please call us for refund');
                         // Refresh the page or update UI as needed
                         location.reload();
                     } else {
