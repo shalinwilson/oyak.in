@@ -576,12 +576,6 @@
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
         <field name="target">current</field>
-        <field name="view_ids"
-               eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('view_sale_order_tree_view')}),
-                          (0, 0, {'view_mode': 'form', 'view_id': ref('sale_order_kenz_view_form')}),
-
-                         ]"/>
         <field name="domain">[('user_cancelled','=',True)]</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">Click to see Sale Orders</p>
