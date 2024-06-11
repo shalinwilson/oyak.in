@@ -7,6 +7,8 @@ odoo.define('website_return_management.return', function (require) {
             $(document).on('click', '.cancel-order-btn', function(ev) {
             ev.preventDefault();
             console.log("workinnnnnnnnnnnnnnnnnn");
+
+            if (confirm('Are you sure you want to cancel this order?')) {
             var orderId = $(this).data('order_id'); // Use $(this) instead of $(ev.currentTarget)
             console.log(orderId)
             ajax.jsonRpc('/cancel_order', 'call', {'order_id': orderId})
@@ -21,7 +23,7 @@ odoo.define('website_return_management.return', function (require) {
                         alert(result.error);
                     }
                 });
-
+        }
         });
 
         $("#hidden_box_btn").on('click', function () {

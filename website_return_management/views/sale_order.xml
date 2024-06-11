@@ -350,20 +350,28 @@
             <t t-if="orders" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">
-                        <th>
-                            <span class='d-none d-md-inline'>Sales Order #</span>
-                            <span class='d-block d-md-none'>Ref.</span>
-                        </th>
+
+                        <th class="text-end">Action</th>
+
+
                         <!--                        <th class="text-end">Order Date</th>-->
-                        <th class="text-center"/>
-                        <th class="text-center">Total</th>
-                        <th class="text-end">Cancel</th>
+                        <th class="text-center">Order</th>
+                        <th class="text-end">Total</th>
+
 
                     </tr>
                 </thead>
                 <t t-foreach="orders" t-as="order">
                     <tr>
-                        <td>
+                         <td class="text-end">
+                            <t t-if="not order.tracking_number">
+                                <a class="cancel-order-btn" t-att-data-order_id="order.id" href="#">Cancel</a>
+                            </t>
+                            <t t-if="order.tracking_number">
+                                <span class="text-warning">Shipped</span>
+                            </t>
+                        </td>
+                        <td class="text-center">
                             <a t-att-href="order.get_portal_url()">
                                 <t t-out="order.name"/>
                             </a>
@@ -373,22 +381,15 @@
                         <!--                            <span class='d-none d-md-inline' t-field="order.date_order"-->
                         <!--                                  t-options="{'time_only': True}"/>-->
                         <!--                        </td>-->
-                        <td class="text-center">
-                            <span t-if="order.state == 'done'" class="badge rounded-pill text-bg-success">
-                                <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"/>Done
-                            </span>
-                        </td>
-                        <td class="text-center">
+<!--                        <td class="text-center">-->
+<!--                            <span t-if="order.state == 'done'" class="badge rounded-pill text-bg-success">-->
+<!--                                <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"/>Done-->
+<!--                            </span>-->
+<!--                        </td>-->
+                        <td class="text-end">
                             <span t-field="order.amount_total"/>
                         </td>
-                        <td class="text-end">
-                            <t t-if="not order.tracking_number">
-                                <a class="cancel-order-btn" t-att-data-order_id="order.id" href="#">Cancel</a>
-                            </t>
-                            <t t-if="order.tracking_number">
-                                <span class="text-warning">Shipped</span>
-                            </t>
-                        </td>
+
                     </tr>
                 </t>
             </t>
