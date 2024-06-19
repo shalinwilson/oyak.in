@@ -8,7 +8,10 @@ class ProductTemplate(models.Model):
 
     cost_for_reporting = fields.Integer()
 
+class AccountMove(models.Model):
+    _inherit = 'account.move'
 
+    is_split = fields.Boolean()
 class reporting(models.Model):
     _name = 'reporting.reporting'
     _description = 'reporting.reporting'
@@ -47,7 +50,9 @@ class reporting(models.Model):
         self.total_orders = len(so_in_period.filtered(lambda x: x.is_rto_order == False))
         self.total_cod = len(so_in_period.filtered(lambda self: self.payment_type == 'cod'))
         self.total_prepaid = len(so_in_period.filtered(lambda self: self.payment_type == 'Pre_paid'))
+        print(self.total_cod,self.total_orders,"workinggggg")
         self.cod_prepaid_ratio = (self.total_cod / self.total_orders) * 100
+
         self.total_rto_orders = self.env['sale.order'].search_count([('date_order', '>=', start_date),
                                                                      ('date_order', '<=', end_date),
                                                                      ('is_rto_order', '=', True),
@@ -63,6 +68,16 @@ class reporting(models.Model):
                                                                  ('partner_id', '=', delhivery_partner.id),
                                                                  ('payment_type', '=', 'outbound')
                                                                  ])
+        spliting_bills = self.env['account.move'].search([('date', '>=', start_date),
+                                                                 ('date', '<=', end_date),
+                                                                 ('state', '=', 'posted'),
+                                                          ('is_split','=',True),
+                                                                 ('move_type', '=', 'in_invoice')
+                                                                 ])
+
+        split_amount = sum(spliting_bills.mapped('amount_total'))
+        print(split_amount)
+        self.other_deductions = split_amount
         self.note = str(delhivery_payments) + str(delhivery_partner)
         self.delivery_payments_total = sum(delhivery_payments.mapped('amount_total'))
 

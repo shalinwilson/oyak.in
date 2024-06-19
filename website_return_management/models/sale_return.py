@@ -67,6 +67,8 @@ class ReturnOrder(models.Model):
                                                ' the associated Sale Order/Purchase Order')
 
     def return_confirm(self):
+        self.write({'state': 'done'})
+        return
         """Confirm the sale return"""
         if not self.source_pick:
             stock_picks = self.env['stock.picking'].search([('origin', '=', self.sale_order.name)])
