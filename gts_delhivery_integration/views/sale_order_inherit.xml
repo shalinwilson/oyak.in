@@ -55,10 +55,11 @@
                 <field name="user_cancelled" optional="show"/>
 <!--                <field name="partner_mobile"/>-->
                 <field name="danger" invisible="1"/>
-            </xpath>
-            <field name="call_detail"/>
+                <field name="call_detail"/>
             <field name="payment_type"/>
             <field name="tracking_number"/>
+            </xpath>
+
 
             <xpath expr="//field[@name='website_id']" position="replace">
             </xpath>
