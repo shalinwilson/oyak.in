@@ -26,7 +26,7 @@
             <field name="analytic_account_id" position="after">
             </field>
             <field name="payment_term_id" position="after">
-                <field name="partner_mobile"/>
+<!--                <field name="partner_mobile"/>-->
                 <field name="call_detail"/>
                 <field name="payment_type"/>
                 <field name="tracking_number"/>
@@ -53,7 +53,7 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="user_cancelled" optional="show"/>
-                <field name="partner_mobile"/>
+<!--                <field name="partner_mobile"/>-->
                 <field name="danger" invisible="1"/>
             </xpath>
             <field name="call_detail"/>
@@ -77,7 +77,7 @@
                 <field name="name"/>
                 <field name="danger" invisible="1"/>
                 <field name="partner_id"/>
-                <field name="partner_mobile"/>
+<!--                <field name="partner_mobile"/>-->
                 <field name="call_detail"/>
                 <field name="tracking_number"/>
             </tree>
@@ -159,7 +159,7 @@
                     <group name="sale_header">
                         <group>
                             <field name="partner_id" nolabel="1"/>
-                            <field name="partner_mobile" nolabel="1"/>
+<!--                            <field name="partner_mobile" nolabel="1"/>-->
 
 
                             <field name="partner_invoice_id" groups="account.group_delivery_invoice_address"
