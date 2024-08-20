@@ -6,7 +6,7 @@
     'description': """shipment, shipment integration,Delhivery Integration ,delhivery, integration , shipment integration, odoo shipment,shipment odoo,
      integration,""",
     'depends': ['base', 'stock', 'mail', 'sale', 'delivery', 'website_sale',
-                "account",'website_sale_stock' ],
+                "account",'website_sale_stock','website_sale' ],
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
