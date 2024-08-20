@@ -229,7 +229,7 @@ class StockPicking(models.Model):
         phone = phone.replace(' ', '')
         data = {
             "shipments": [{
-                "add": partner_street + ' ' + partner_street2,
+                "add": partner_street + ' ' + partner_street2 + ','+partner_city,
                 'address_type': 'home',
                 # todo check BLH
                 "shipment_length":25,
