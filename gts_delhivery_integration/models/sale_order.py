@@ -4,6 +4,8 @@ from odoo import models, fields, api, _
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    slip_generation_date = fields.Date()
+
     payment_type = fields.Selection([
         ('cod', "COD"),
         ('Pre_paid', 'Pre-Paid'),

@@ -29,6 +29,7 @@
                 <field name="partner_mobile"/>
                 <field name="call_detail"/>
                 <field name="payment_type"/>
+                <field name="slip_generation_date"/>
                 <field name="tracking_number"/>
                 <field name="user_cancelled"/>
                 <field name="is_rto_order"/>
@@ -50,6 +51,8 @@
                 <field name="cod_collected"/>
                 <field name="call_detail"/>
                 <field name="tracking_number"/>
+                                <field name="slip_generation_date" optional="show"/>
+
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="user_cancelled" optional="show"/>

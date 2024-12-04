@@ -130,6 +130,7 @@ class StockPicking(models.Model):
             data = self.env['sale.order'].search([('name', '=', so_num)], limit=1)
 
         total_amount = data.amount_total
+        so = data
         warehouse = self.picking_type_id.warehouse_id
         self.cancelled = False
         # function for register order with Delhivery
@@ -303,6 +304,8 @@ class StockPicking(models.Model):
                 'status': 'Generated'
                 # 'created_date': datetime.datetime.now()
             })
+            if so:
+                so.slip_generation_date = fields.Date.today()
             success = True
             # self.env.user.notify_danger(message='Hi %s, \n \n We are happy to inform you that your order is ready, shipped, and on its way to you! You know what this means- you will soon own an original, unique, and handcrafted product, made with love by the women of Shilpgram \n \n Your order will be delivered by our logistics partner Delhivery. You can track your shipment [link] with tracking No: %s \n \n If you have any questions for us, just hit reply and our team will be happy to help you.' % (self.partner_id.name, key.get('waybill')))
             # notification = _('Hi %s, \n \n We are happy to inform you that your order is ready, shipped, and on its way to you! You know what this means- you will soon own an original, unique, and handcrafted product, made with love by the women of Shilpgram \n \n Your order will be delivered by our logistics partner Delhivery. You can track your shipment [link] with tracking No: %s \n \n If you have any questions for us, just hit reply and our team will be happy to help you.' % (self.partner_id.name, key.get('waybill')))
