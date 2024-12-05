@@ -24,9 +24,10 @@ class SaleOrderReport(models.AbstractModel):
 
                     product_data[product_key]['quantity'] += line.product_uom_qty
         print(list(product_data.values()))
+        consolidated_data = sorted(product_data.values(), key=lambda x: x['name'])
         return {
             'doc_ids': docids,
             'doc_model': 'sale.order',
             'docs': sale_orders,
-            'consolidated_data': list(product_data.values()),
+            'consolidated_data': consolidated_data
         }
