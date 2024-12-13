@@ -35,5 +35,5 @@ class CashfreeController(http.Controller):
                         'cashfree',response_val
                     )
 
-                    tx_sudo._process_notification_data('cashfree', response_val)
+                    tx_sudo._handle_notification_data('cashfree', response_val)
         return werkzeug.utils.redirect('/payment/status')
