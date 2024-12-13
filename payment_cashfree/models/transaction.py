@@ -66,9 +66,9 @@ class PaymentTransactionCashfree(models.Model):
                 "Cashfree: " + _("No transaction found matching reference %s.", reference)
             )
         invalid_parameters = []
-        if tx.acquirer_reference and notification_data.get('order_id') != tx.acquirer_reference:
+        if tx.reference and notification_data.get('order_id') != tx.reference:
             invalid_parameters.append(
-                ('Transaction Id', notification_data.get('order_id'), tx.acquirer_reference))
+                ('Transaction Id', notification_data.get('order_id'), tx.reference))
         if float_compare(float(notification_data.get('order_amount', 0.0)), tx.amount, 2) != 0:
             invalid_parameters.append(
                 ('order_amount', notification_data.get('order_amount'), '%.2f' % tx.amount))
@@ -87,7 +87,7 @@ class PaymentTransactionCashfree(models.Model):
             return
         status = notification_data.get('order_status')
         self.write({
-            'acquirer_reference': notification_data.get('referenceId'),
+            'provider_reference': notification_data.get('referenceId'),
         })
         if status == 'PAID':
             self._set_done()
