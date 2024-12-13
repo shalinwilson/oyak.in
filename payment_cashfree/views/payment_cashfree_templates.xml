@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="checkout" inherit_id="payment.checkout">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+        </xpath>
+    </template>
+
+    <template id="manage" inherit_id="payment.manage">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+        </xpath>
+    </template>
+
+    <template id="cashfree_form">
+        <input type="hidden" name="appId" t-att-value='appId' />
+        <input type="hidden" name="orderId" t-att-value="orderId"/>
+        <input type="hidden" name="orderAmount" t-att-value="orderAmount"/>
+        <input type="hidden" name="orderCurrency" t-att-value="orderCurrency"/>
+        <input type="hidden" name="customerName" t-att-value="customerName"/>
+        <input type="hidden" name="customerEmail" t-att-value="customerEmail"/>
+        <input type="hidden" name="customerPhone" t-att-value="customerPhone"/>
+        <input type="hidden" name="returnUrl" t-att-value="returnUrl"/>
+        <input type="hidden" name="notifyUrl" t-att-value="notifyUrl"/>
+        <input type="hidden" name="paymentSessionId" t-att-value="paymentSessionId"/>
+        <input type="hidden" name="paymentMode" t-att-value="paymentMode"/>
+        <input type="hidden" name="signature" t-att-value="signature"/>
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+    </template>
+</odoo>

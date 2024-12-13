@@ -1,0 +1,97 @@
+# -*- coding: utf-8 -*-
+# Copyright 2018, 2020 Heliconia Solutions Pvt Ltd (https://heliconia.io)
+
+import hashlib
+import hmac
+import base64
+
+from werkzeug import urls
+
+from odoo import api, fields, models, _
+from odoo.addons.payment.models.payment_provider import ValidationError
+from odoo.tools.float_utils import float_compare
+from odoo.tools import consteq, float_round
+
+import logging
+import requests
+import json
+
+_logger = logging.getLogger(__name__)
+
+
+class PaymentTransactionCashfree(models.Model):
+    _inherit = 'payment.transaction'
+
+    def _get_specific_rendering_values(self, values):
+        print(values)
+        res = super()._get_specific_rendering_values(values)
+        if self.provider_code != 'cashfree':
+            return res
+        base_url = self.get_base_url()
+        cashfree_values = dict(appId=self.provider_id.cashfree_app_id,
+                               orderId=values['reference'],
+                               orderAmount=values['amount'],
+                               orderCurrency=values['currency_id'],
+                               customerName=values.get('partner_name'),
+                               customerEmail=values.get('partner_email'),
+                               customerPhone=values.get('partner_phone'),
+                               returnUrl=urls.url_join(base_url, '/payment/cashfree/return'),
+                               notifyUrl=urls.url_join(base_url, '/payment/cashfree/notify'),
+                               )
+        cashfree_values['signature'] = self.provider_id._cashfree_generate_sign('out', cashfree_values)
+        values.update(cashfree_values)
+        response = self.provider_id.get_cashfree_return_url(values)
+        cashfree_values.update({
+            "paymentSessionId": response.get("payment_session_id"),
+            "paymentMode": "production" if self.provider_id.state == 'enabled' else "sandbox",
+            "returnUrl": response.get("order_meta", {}).get("return_url", ""),
+            "notifyUrl": response.get("order_meta", {}).get("notify_url", ""),
+        })
+        values.update(cashfree_values)
+        return cashfree_values
+
+    @api.model
+    def _get_tx_from_feedback_data(self, provider, data):
+        tx = super()._get_tx_from_feedback_data(provider, data)
+        if provider != 'cashfree':
+            return tx
+
+        reference = data.get('order_id')
+        if reference:
+            tx = self.search([('reference', '=', reference)], limit=1)
+            tx.provider = 'cashfree'
+
+        if not tx:
+            raise ValidationError(
+                "Cashfree: " + _("No transaction found matching reference %s.", reference)
+            )
+        invalid_parameters = []
+        if tx.acquirer_reference and data.get('order_id') != tx.acquirer_reference:
+            invalid_parameters.append(
+                ('Transaction Id', data.get('order_id'), tx.acquirer_reference))
+        if float_compare(float(data.get('order_amount', 0.0)), tx.amount, 2) != 0:
+            invalid_parameters.append(
+                ('order_amount', data.get('order_amount'), '%.2f' % tx.amount))
+
+        if invalid_parameters:
+            _error_message = '%s: incorrect tx data:\n' % (provider)
+            for item in invalid_parameters:
+                _error_message += '\t%s: received %s instead of %s\n' % (item[0], item[1], item[2])
+            raise ValidationError(_(_error_message))
+
+        return tx
+
+    def _process_feedback_data(self, data):
+        super()._process_feedback_data(data)
+        if self.provider_code != 'cashfree':
+            return
+        status = data.get('order_status')
+        self.write({
+            'acquirer_reference': data.get('referenceId'),
+        })
+        if status == 'PAID':
+            self._set_done()
+        elif status in ['FAILED', 'CANCELLED', 'FLAGGED']:
+            self._set_canceled()
+        else:
+            self._set_pending()
