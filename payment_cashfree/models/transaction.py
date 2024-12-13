@@ -52,7 +52,7 @@ class PaymentTransactionCashfree(models.Model):
 
     @api.model
     def _get_tx_from_notification_data(self, provider_code, notification_data):
-        tx = super()._get_tx_from_feedback_data(provider_code, notification_data)
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'cashfree':
             return tx
 
@@ -82,7 +82,7 @@ class PaymentTransactionCashfree(models.Model):
         return tx
 
     def _process_notification_data(self, notification_data):
-        super()._process_feedback_data(notification_data)
+        super()._process_notification_data(notification_data)
         if self.provider_code != 'cashfree':
             return
         status = notification_data.get('order_status')
