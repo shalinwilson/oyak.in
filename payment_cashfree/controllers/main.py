@@ -27,11 +27,12 @@ class CashfreeController(http.Controller):
             response = requests.post(order_url, headers=header)
             if response.status_code == 200:
                 response_val = json.loads(response.text)
+                _logger.info(str(post))
                 _logger.info(
                     'Cashfree: entering form_feedback with post data %s', pprint.pformat(response_val))
                 if post:
                     tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                        'cashfree',post
+                        'cashfree',response_val
                     )
 
                     tx_sudo._process_notification_data('cashfree', response_val)
