@@ -74,11 +74,11 @@ class PaymentTransactionCashfree(models.Model):
                 ('order_amount', notification_data.get('order_amount'), '%.2f' % tx.amount))
 
         if invalid_parameters:
-            _error_message = '%s: incorrect tx data:\n' % (provider_code)
+            _error_message = '%s: incorrect tx data:\n' % (notification_data)
             for item in invalid_parameters:
                 _error_message += '\t%s: received %s instead of %s\n' % (item[0], item[1], item[2])
             raise ValidationError(_(_error_message))
-
+        _logger.info("returning from _get_tx_from_notification_data ")
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -89,6 +89,9 @@ class PaymentTransactionCashfree(models.Model):
         self.write({
             'provider_reference': notification_data.get('referenceId'),
         })
+        _logger.info(self.provider_reference, notification_data)
+        _logger.info("returning from _process_notification_data ")
+
         if status == 'PAID':
             self._set_done()
         elif status in ['FAILED', 'CANCELLED', 'FLAGGED']:
