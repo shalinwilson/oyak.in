@@ -59,7 +59,7 @@ class PaymentTransactionCashfree(models.Model):
         reference = notification_data.get('order_id')
         if reference:
             tx = self.search([('reference', '=', reference)], limit=1)
-            tx.provider = 'cashfree'
+            tx.provider_code = 'cashfree'
 
         if not tx:
             raise ValidationError(
