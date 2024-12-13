@@ -51,12 +51,12 @@ class PaymentTransactionCashfree(models.Model):
         return cashfree_values
 
     @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'cashfree':
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
+        tx = super()._get_tx_from_feedback_data(provider_code, notification_data)
+        if provider_code != 'cashfree':
             return tx
 
-        reference = data.get('order_id')
+        reference = notification_data.get('order_id')
         if reference:
             tx = self.search([('reference', '=', reference)], limit=1)
             tx.provider = 'cashfree'
@@ -66,28 +66,28 @@ class PaymentTransactionCashfree(models.Model):
                 "Cashfree: " + _("No transaction found matching reference %s.", reference)
             )
         invalid_parameters = []
-        if tx.acquirer_reference and data.get('order_id') != tx.acquirer_reference:
+        if tx.acquirer_reference and notification_data.get('order_id') != tx.acquirer_reference:
             invalid_parameters.append(
-                ('Transaction Id', data.get('order_id'), tx.acquirer_reference))
-        if float_compare(float(data.get('order_amount', 0.0)), tx.amount, 2) != 0:
+                ('Transaction Id', notification_data.get('order_id'), tx.acquirer_reference))
+        if float_compare(float(notification_data.get('order_amount', 0.0)), tx.amount, 2) != 0:
             invalid_parameters.append(
-                ('order_amount', data.get('order_amount'), '%.2f' % tx.amount))
+                ('order_amount', notification_data.get('order_amount'), '%.2f' % tx.amount))
 
         if invalid_parameters:
-            _error_message = '%s: incorrect tx data:\n' % (provider)
+            _error_message = '%s: incorrect tx data:\n' % (provider_code)
             for item in invalid_parameters:
                 _error_message += '\t%s: received %s instead of %s\n' % (item[0], item[1], item[2])
             raise ValidationError(_(_error_message))
 
         return tx
 
-    def _process_feedback_data(self, data):
-        super()._process_feedback_data(data)
+    def _process_notification_data(self, notification_data):
+        super()._process_feedback_data(notification_data)
         if self.provider_code != 'cashfree':
             return
-        status = data.get('order_status')
+        status = notification_data.get('order_status')
         self.write({
-            'acquirer_reference': data.get('referenceId'),
+            'acquirer_reference': notification_data.get('referenceId'),
         })
         if status == 'PAID':
             self._set_done()

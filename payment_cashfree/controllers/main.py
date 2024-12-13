@@ -30,9 +30,9 @@ class CashfreeController(http.Controller):
                 _logger.info(
                     'Cashfree: entering form_feedback with post data %s', pprint.pformat(response_val))
                 if post:
-                    tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+                    tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                         'cashfree',post
                     )
 
-                    tx_sudo._process_feedback_data('cashfree', response_val)
+                    tx_sudo._process_notification_data('cashfree', response_val)
         return werkzeug.utils.redirect('/payment/status')
