@@ -85,7 +85,7 @@ class PaymentAcquirerCashfree(models.Model):
         url = self.cashfree_get_form_action_url() + "/orders"
         order_name = values.get('reference').split('-')[0]
         order_id = self.env['sale.order'].sudo().search([('name', '=', order_name)], limit=1)
-        print("xxx ",order_id,order_name)
+        _logger.info(str("xxx ",order_id,order_name))
         customer_details = {
             "customer_id": 'CU' + str(order_id.partner_id.id),
             "customer_name": order_id.partner_id.name,
@@ -105,5 +105,5 @@ class PaymentAcquirerCashfree(models.Model):
         payload = json.dumps(data)
         headers = self.get_api_header()
         response = requests.request("POST", url, headers=headers, data=payload)
-        print(response,"asd")
+        _logger.info(response,"asd")
         return json.loads(response.text)

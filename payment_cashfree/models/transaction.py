@@ -23,7 +23,7 @@ class PaymentTransactionCashfree(models.Model):
     _inherit = 'payment.transaction'
 
     def _get_specific_rendering_values(self, values):
-        print(values)
+        _logger.info(str(values))
         res = super()._get_specific_rendering_values(values)
         if self.provider_code != 'cashfree':
             return res
@@ -41,6 +41,7 @@ class PaymentTransactionCashfree(models.Model):
         cashfree_values['signature'] = self.provider_id._cashfree_generate_sign('out', cashfree_values)
         values.update(cashfree_values)
         response = self.provider_id.get_cashfree_return_url(values)
+        _logger.info(str(response+"xxx"))
         cashfree_values.update({
             "paymentSessionId": response.get("payment_session_id"),
             "paymentMode": "production" if self.provider_id.state == 'enabled' else "sandbox",
