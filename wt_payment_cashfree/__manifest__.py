@@ -10,10 +10,10 @@
     'support': 'mailto:support@warlocktechnologies.com',
     'depends': ['account_payment','payment'],
     'data': [
-        "views/payment_cashfree_templates.xml",
-        "views/payment_provider_form.xml",
-        "data/payment_provider_data.xml",
-        "views/payment_templates.xml",   
+        # "views/payment_cashfree_templates.xml",
+        # "views/payment_provider_form.xml",
+        # "data/payment_provider_data.xml",
+        # "views/payment_templates.xml",
     ],
     'assets': {
         'web.assets_frontend': [
