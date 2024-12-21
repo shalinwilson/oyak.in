@@ -108,6 +108,7 @@ class PaymentAcquirerCashfree(models.Model):
         _logger.info(payload)
         _logger.info(headers)
 
-        response = requests.request("POST", url, headers=headers, data=payload)
-        _logger.info(response,"asd")
+        response = requests.post(url, headers=headers, data=payload)
+        _logger.info(response)
+        _logger.info("asdasd")
         return json.loads(response.text)
