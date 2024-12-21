@@ -22,29 +22,32 @@ _logger = logging.getLogger(__name__)
 class PaymentTransactionCashfree(models.Model):
     _inherit = 'payment.transaction'
 
-    def _get_specific_rendering_values(self, values):
-        _logger.info(str(values))
+    def _get_specific_rendering_values(self, processing_values):
+        _logger.info(str(processing_values))
         _logger.info("aas")
-        res = super()._get_specific_rendering_values(values)
+        _logger.info(self.partner_name)
+        _logger.info(self.partner_email)
+        _logger.info(self.partner_phone)
+        res = super()._get_specific_rendering_values(processing_values)
         if self.provider_code != 'cashfree':
             return res
         base_url = self.get_base_url()
         cashfree_values = dict(appId=self.provider_id.cashfree_app_id,
-                               orderId=values['reference'],
-                               orderAmount=values['amount'],
-                               orderCurrency=values['currency_id'],
-                               customerName=values.get('partner_name'),
-                               customerEmail=values.get('partner_email'),
-                               customerPhone=values.get('partner_phone'),
+                               orderId=processing_values['reference'],
+                               orderAmount=processing_values['amount'],
+                               orderCurrency=processing_values['currency_id'],
+                               customerName=processing_values.get('partner_name'),
+                               customerEmail=processing_values.get('partner_email'),
+                               customerPhone=processing_values.get('partner_phone'),
                                returnUrl=urls.url_join(base_url, '/payment/cashfree/return'),
                                notifyUrl=urls.url_join(base_url, '/payment/cashfree/notify'),
                                )
         cashfree_values['signature'] = self.provider_id._cashfree_generate_sign('out', cashfree_values)
-        values.update(cashfree_values)
-        _logger.info(values)
+        processing_values.update(cashfree_values)
+        _logger.info(processing_values)
         _logger.info("values )))))))))))))))))))")
 
-        response = self.provider_id.get_cashfree_return_url(values)
+        response = self.provider_id.get_cashfree_return_url(processing_values)
         _logger.info(response)
         _logger.info("response")
         cashfree_values.update({
@@ -53,7 +56,7 @@ class PaymentTransactionCashfree(models.Model):
             "returnUrl": response.get("order_meta", {}).get("return_url", ""),
             "notifyUrl": response.get("order_meta", {}).get("notify_url", ""),
         })
-        values.update(cashfree_values)
+        processing_values.update(cashfree_values)
         return cashfree_values
 
     @api.model
