@@ -41,6 +41,9 @@ class PaymentTransactionCashfree(models.Model):
                                )
         cashfree_values['signature'] = self.provider_id._cashfree_generate_sign('out', cashfree_values)
         values.update(cashfree_values)
+        _logger.info(values)
+        _logger.info("values )))))))))))))))))))")
+
         response = self.provider_id.get_cashfree_return_url(values)
         _logger.info(response)
         _logger.info("response")
