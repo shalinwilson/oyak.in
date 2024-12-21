@@ -36,9 +36,9 @@ class PaymentTransactionCashfree(models.Model):
                                orderId=processing_values['reference'],
                                orderAmount=processing_values['amount'],
                                orderCurrency=processing_values['currency_id'],
-                               customerName=processing_values.get('partner_name'),
-                               customerEmail=processing_values.get('partner_email'),
-                               customerPhone=processing_values.get('partner_phone'),
+                               customerName=self.partner_name,
+                               customerEmail=self.partner_email,
+                               customerPhone=self.partner_phone,
                                returnUrl=urls.url_join(base_url, '/payment/cashfree/return'),
                                notifyUrl=urls.url_join(base_url, '/payment/cashfree/notify'),
                                )
