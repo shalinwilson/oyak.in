@@ -35,6 +35,7 @@ class PaymentAcquirerCashfree(models.Model):
     def _get_cashfree_urls(self, environment):
         """ Cashfree URLs"""
         if environment == 'prod':
+            print("xxx prod")
             return {'cashfree_form_url': 'https://api.cashfree.com/pg'}
         else:
             return {'cashfree_form_url': 'https://sandbox.cashfree.com/pg'}
@@ -84,6 +85,7 @@ class PaymentAcquirerCashfree(models.Model):
         url = self.cashfree_get_form_action_url() + "/orders"
         order_name = values.get('reference').split('-')[0]
         order_id = self.env['sale.order'].sudo().search([('name', '=', order_name)], limit=1)
+        print("xxx ",order_id,order_name)
         customer_details = {
             "customer_id": 'CU' + str(order_id.partner_id.id),
             "customer_name": order_id.partner_id.name,
