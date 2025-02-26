@@ -4,7 +4,7 @@ from collections import defaultdict
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-
+    partner_mobile = fields.Char(related="partner_id.phone",store=True)
 
 class SaleOrderReport(models.AbstractModel):
     _name = 'report.reporting.report_sale_slips'

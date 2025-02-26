@@ -33,12 +33,7 @@ class SaleOrder(models.Model):
 
 
     danger = fields.Boolean("prepaid not sent",compute='_get_danger')
-    @api.depends('partner_id')
-    def get_mobile_num(self):
-        for rec in self:
-            rec.partner_mobile = rec.partner_id.phone or rec.partner_id.mobile
-
-    partner_mobile = fields.Char(compute="get_mobile_num")
+    partner_mobile = fields.Char(related="partner_id.phone",store=True)
 
     @api.depends('picking_ids')
     def _get_tracking_number(self):
