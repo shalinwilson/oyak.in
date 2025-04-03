@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -102,6 +103,12 @@ class SaleOrder(models.Model):
                     'res_id': order.id,
                 }
                 self.env['mail.message'].sudo().create(values)
+        elif 'call_detail' in vals and vals['call_detail'] == 'confirm':
+            if self.payment_type == 'Pre_paid':
+                payment = self.env['payment.transaction'].search([('sale_order_ids','in',self.ids),('state','=','done')])
+                if not payment and self.cod_collected < 1:
+                    raise UserError(_('Check if they have made the payment'))
+
         return res
 
     state_id = fields.Many2one('res.country.state', string='State', related='partner_id.state_id')
@@ -117,6 +124,10 @@ class SaleOrder(models.Model):
                    ('cancel', 'Cancel'),
                    ],
         required=False, tracking=True)
+
+
+
+
 
     @api.depends('order_line', 'order_line.product_id')
     def _compute_payment_type(self):
