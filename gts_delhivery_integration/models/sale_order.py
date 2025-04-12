@@ -39,16 +39,12 @@ class SaleOrder(models.Model):
     @api.depends('picking_ids')
     def _get_tracking_number(self):
         for rec in self:
+            tracking = ''
             for picking in rec.picking_ids:
-                if picking.state != 'cancel':
-                    if picking.waybill:
-                        rec.tracking_number = picking.waybill
-                    else:
-                        rec.tracking_number = ''
-                else:
-                    rec.tracking_number = ''
-            if not rec.picking_ids:
-                rec.tracking_number = ''
+                if picking.state != 'cancel' and picking.waybill:
+                    tracking = picking.waybill
+                    break
+            rec.tracking_number = tracking
 
     def make_delhivery_order(self):
         if len(self.picking_ids) == 1:
