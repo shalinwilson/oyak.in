@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
-
         <template id="report_sale_slips">
             <t t-call="web.html_container">
                 <t t-call="web.external_layout">
@@ -40,5 +38,95 @@
                 file="reporting.report_sale_slips"
                 report_type="qweb-pdf"
         />
-    </data>
+
+<record id="paperformat_dtdc_slip_nopadding" model="report.paperformat">
+    <field name="name">DTDC No Header/Footer</field>
+    <field name="default" eval="False"/>
+    <field name="format">A4</field>
+    <field name="page_height">0</field>
+    <field name="page_width">0</field>
+    <field name="margin_top">0</field>
+    <field name="margin_bottom">0</field>
+    <field name="margin_left">0</field>
+    <field name="margin_right">0</field>
+    <field name="header_line" eval="False"/>
+    <field name="orientation">Portrait</field>
+    <field name="dpi">90</field>
+</record>
+
+    <template id="reporting.report_dtdc_slips">
+    <t t-call="web.html_container">
+        <style>
+.content {
+    page-break-inside: avoid;
+}
+</style>
+
+        <t t-foreach="docs" t-as="doc">
+<!--        <t t-call="web.external_layout">-->
+
+            <div class="page">
+                <div class="content">
+
+
+
+                <h2>DTDC SLIP</h2>
+
+                <!-- FROM Address (Seller) -->
+                <h4>From:</h4>
+                <p>
+                    <strong>Company:</strong> <t t-esc="doc.company_id.name"/><br/>
+                    <strong>Address:</strong> <t t-esc="doc.company_id.partner_id.contact_address"/><br/>
+                    <strong>Phone:</strong> <t t-esc="doc.company_id.phone"/>
+                </p>
+
+                <!-- TO Address (Customer) -->
+                <h4>To:</h4>
+                <p>
+                    <strong>Customer:</strong> <t t-esc="doc.partner_shipping_id.name"/><br/>
+                    <strong>Address:</strong> <t t-esc="doc.partner_shipping_id.contact_address"/><br/>
+                    <strong>Phone:</strong> <t t-esc="doc.partner_shipping_id.phone"/>
+                </p>
+
+                <!-- Product Table -->
+                <h4>Products:</h4>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="doc.order_line" t-as="line">
+                            <tr>
+                                <td><t t-esc="line.product_id.display_name"/></td>
+                                <td><t t-esc="line.product_uom_qty"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                </div>
+
+            </div>
+
+
+        </t>
+<!--        </t>-->
+
+    </t>
+</template>
+
+
+        <report
+                id="report_dtdc_order"
+                model="sale.order"
+                string="DTDC SLIP"
+                name="reporting.report_dtdc_slips"
+                file="reporting.report_dtdc_slips"
+                report_type="qweb-pdf"
+                paperformat="paperformat_dtdc_slip_nopadding"
+        />
+
+
 </odoo>
