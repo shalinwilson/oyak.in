@@ -24,7 +24,8 @@ class SaleOrder(models.Model):
             rec.delhivery_cost = cost
 
     delhivery_cost = fields.Float(compute="get_delivery_cost")
-    @api.depends('payment_type','tracking_number')
+
+    @api.depends('payment_type', 'tracking_number')
     def _get_danger(self):
         for rec in self:
             if rec.payment_type == 'Pre_paid' and (rec.tracking_number == '' or rec.is_rto_order == True):
@@ -32,9 +33,8 @@ class SaleOrder(models.Model):
             else:
                 rec.danger = False
 
-
-    danger = fields.Boolean("prepaid not sent",compute='_get_danger')
-    partner_mobile = fields.Char(related="partner_id.phone",store=True)
+    danger = fields.Boolean("prepaid not sent", compute='_get_danger')
+    partner_mobile = fields.Char(related="partner_id.phone", store=True)
 
     @api.depends('picking_ids')
     def _get_tracking_number(self):
@@ -92,16 +92,30 @@ class SaleOrder(models.Model):
         if 'call_detail' in vals and vals['call_detail'] == 'not_connected':
             for order in self:
                 values = {
-                    'body': 'we could not reach you on your phone for order confirmation. '
+                    'body': 'We could not reach you on your phone for order confirmation. '
                             'Please connect us for order confirmation on +91 9995322259',
                     'model': 'sale.order',
                     'message_type': 'email',
                     'res_id': order.id,
                 }
                 self.env['mail.message'].sudo().create(values)
+                if order.partner_id.email:  # Ensure customer has an email
+                    mail_values = {
+                        'subject': 'Order Confirmation - Could not reach you',
+                        'body_html': """
+                                            <p>Hello {name},</p>
+                                            <p>We could not reach you on your phone for order confirmation.</p>
+                                            <p>Please connect with us for order confirmation on <b>+91 9995322259</b>.</p>
+                                            <p>Regards,<br/>Oyak Team</p>
+                                        """.format(name=order.partner_id.name or "Customer"),
+                        'email_to': order.partner_id.email,
+                        'auto_delete': True,
+                    }
+                    self.env['mail.mail'].sudo().create(mail_values).send()
         elif 'call_detail' in vals and vals['call_detail'] == 'confirm':
             if self.payment_type == 'Pre_paid':
-                payment = self.env['payment.transaction'].search([('sale_order_ids','in',self.ids),('state','=','done')])
+                payment = self.env['payment.transaction'].search(
+                    [('sale_order_ids', 'in', self.ids), ('state', '=', 'done')])
                 if not payment and self.cod_collected < 1:
                     raise UserError(_('Check if they have made the payment'))
 
@@ -121,9 +135,29 @@ class SaleOrder(models.Model):
                    ],
         required=False, tracking=True)
 
-
-
-
+    def action_call_detail(self):
+        values = {
+            'body': '2nd time we could not reach you on your phone for order confirmation. '
+                    'Please connect us for order confirmation on +91 9995322259 or the order will be automatically '
+                    'cancelled',
+            'model': 'sale.order',
+            'message_type': 'email',
+            'res_id': self.id,
+        }
+        self.env['mail.message'].sudo().create(values)
+        if self.partner_id.email:  # Ensure customer has an email
+            mail_values = {
+                'subject': 'Order Confirmation - Could not reach you',
+                'body_html': """
+                                                    <p>Hello {name},</p>
+                                                    <p>We could not reach you on your phone for order confirmation.</p>
+                                                    <p>Please connect with us for order confirmation on <b>+91 9995322259</b>.</p>
+                                                    <p>Regards,<br/>Oyak Team</p>
+                                                """.format(name=self.partner_id.name or "Customer"),
+                'email_to': self.partner_id.email,
+                'auto_delete': True,
+            }
+            self.env['mail.mail'].sudo().create(mail_values).send()
 
     @api.depends('order_line', 'order_line.product_id')
     def _compute_payment_type(self):

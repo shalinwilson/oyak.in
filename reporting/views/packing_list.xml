@@ -70,7 +70,7 @@
 
 
 
-                <h2>DTDC SLIP</h2>
+                <h2>DTDC SLIP</h2> <t t-esc="doc.name"/>
 
                 <!-- FROM Address (Seller) -->
                 <h4>From:</h4>
@@ -78,6 +78,7 @@
                     <strong>Company:</strong> <t t-esc="doc.company_id.name"/><br/>
                     <strong>Address:</strong> <t t-esc="doc.company_id.partner_id.contact_address"/><br/>
                     <strong>Phone:</strong> <t t-esc="doc.company_id.phone"/>
+                    <strong>or</strong> <t t-esc="doc.company_id.phone"/>
                 </p>
 
                 <!-- TO Address (Customer) -->
@@ -86,6 +87,7 @@
                     <strong>Customer:</strong> <t t-esc="doc.partner_shipping_id.name"/><br/>
                     <strong>Address:</strong> <t t-esc="doc.partner_shipping_id.contact_address"/><br/>
                     <strong>Phone:</strong> <t t-esc="doc.partner_shipping_id.phone"/>
+                    <strong>or:</strong> <t t-esc="doc.partner_shipping_id.modile"/>
                 </p>
 
                 <!-- Product Table -->
@@ -112,7 +114,7 @@
 
 
         </t>
-<!--        </t>-->
+
 
     </t>
 </template>

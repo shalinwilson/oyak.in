@@ -27,7 +27,16 @@
             </field>
             <field name="payment_term_id" position="after">
                 <field name="partner_mobile"/>
-                <field name="call_detail"/>
+                <label for="call_detail"/>
+<div class="o_row">
+    <field name="call_detail"/>
+    <button name="action_call_detail"
+        type="object"
+        string="Retry Call"
+        attrs="{'invisible': [('call_detail', '!=', 'not_connected')]}"/>
+</div>
+
+
                 <field name="payment_type"/>
                 <field name="slip_generation_date"/>
                 <field name="tracking_number"/>
