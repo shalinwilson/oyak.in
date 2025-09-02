@@ -95,13 +95,17 @@
                             <em t-esc="sale_order.name"/>
                         </h2>
 
-                            <t t-if="sale_order.tracking_number">
+                            <t t-if="sale_order.return_order_count == 0 and sale_order.tracking_number">
                                 <a class="btn btn-secondary btn-block" style="color: #FFFFFF;"
                                    id="hidden_box_btn">
                                     <i class="fa fa-truck"></i>
                                     Return
                                 </a>
                             </t>
+                        <t t-if="sale_order.return_order_count > 0">
+                            <p>Your order is already returned.</p>
+                        </t>
+
 
                     </div>
                     <div class="col-6">
