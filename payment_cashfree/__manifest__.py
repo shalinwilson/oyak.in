@@ -13,7 +13,7 @@
 
     'version': '15.0.1.0.0',
     'license': 'OPL-1',
-    'depends': ['payment', 'web'],
+    'depends': ['payment', 'web','sale'],
     'data': [
         'views/payment_views.xml',
         'views/payment_cashfree_templates.xml',

@@ -33,7 +33,7 @@ class SaleOrder(models.Model):
     def _compute_retuns(self):
         """method to compute return count"""
         sale_return_groups = self.env['sale.return'].sudo().read_group(
-            domain=[('sale_order', '=', self.ids)],
+            domain=[('sale_order', 'in', self.ids)],
             fields=['sale_order'], groupby=['sale_order'])
         orders = self.browse()
         for group in sale_return_groups:

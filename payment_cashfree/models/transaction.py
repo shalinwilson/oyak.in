@@ -108,3 +108,17 @@ class PaymentTransactionCashfree(models.Model):
             self._set_canceled()
         else:
             self._set_pending()
+
+    is_order_confirmed_and_paid = fields.Boolean(
+        string="Order Confirmed & Paid",
+        compute="_compute_is_order_confirmed_and_paid",
+
+    )
+
+    @api.depends('state', 'sale_order_ids')  # Track relation only
+    def _compute_is_order_confirmed_and_paid(self):
+        for tx in self:
+            # Fetch latest order states manually to ensure update
+            orders = tx.sale_order_ids
+            has_unconfirmed_order = any(order.state != 'sale' for order in orders)
+            tx.is_order_confirmed_and_paid = tx.state == 'done' and has_unconfirmed_order

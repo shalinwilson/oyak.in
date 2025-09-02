@@ -21,4 +21,14 @@
         <field name="view_mode">form</field>
         <field name="context">{'form_view_initial_mode': 'edit'}</field>
     </record>
+    <record id="view_payment_transaction_list_inherit" model="ir.ui.view">
+        <field name="name">payment.transaction.list.inherit</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.payment_transaction_list"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="is_order_confirmed_and_paid"/>
+            </field>
+        </field>
+    </record>
 </odoo>
