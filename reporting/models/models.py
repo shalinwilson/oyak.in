@@ -99,3 +99,44 @@ class reporting(models.Model):
         self.profit_against_collected_amount = (self.calculated_profit / (
                     self.sales_amount_collected - self.shipping_cost_total)) * 100
         self.revenue_pro_percent = (self.calculated_profit / self.sales_amount_collected ) * 100
+
+
+
+# forcasted quantity report
+class ProductTemplate(models.Model):
+    _inherit = "product.template"
+
+    def get_no_forecast_products(self):
+        result = []
+        for template in self:
+            if not template.attribute_line_ids:
+                continue
+
+            # Sort by attribute sequence (not line)
+            first_line = template.attribute_line_ids.sorted(key=lambda l: l.attribute_id.sequence)[0]
+
+            attribute = first_line.attribute_id
+            first_value = first_line.value_ids.sorted(key=lambda v: v.sequence)[0] if first_line.value_ids else False
+            if not first_value:
+                continue
+
+            # Find variant that contains this first attribute value
+            variant = template.product_variant_ids.filtered(
+                lambda v: first_value in v.product_template_attribute_value_ids.mapped('product_attribute_value_id')
+            )
+            if not variant:
+                continue
+
+            first_variant = variant[0]
+            forecast = first_variant.virtual_available or 0.0
+
+            if forecast <= 0:
+                result.append({
+                    'product_name': template.name,
+                    'variant_name': first_variant.display_name,
+                    'forecast_qty': forecast,
+                    'sequence': first_variant.sequence,
+                })
+
+        return result
+

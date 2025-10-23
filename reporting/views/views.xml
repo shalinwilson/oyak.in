@@ -10,15 +10,15 @@
                     <field name="date1"/>
                     <field name="date2"/>
                     <field name="sales_amount_collected"/>
-                                <field name="total_amount_refunded"/>
-                                <field name="shipping_cost_total"/>
+                    <field name="total_amount_refunded"/>
+                    <field name="shipping_cost_total"/>
                     <field name="total_orders"/>
                     <field name="cod_prepaid_ratio"/>
-                     <field name="other_deductions"/>
+                    <field name="other_deductions"/>
 
-                                <field name="calculated_profit"/>
-                                <field name="revenue_pro_percent"/>
-                     <field name="profit_against_collected_amount"/>
+                    <field name="calculated_profit"/>
+                    <field name="revenue_pro_percent"/>
+                    <field name="profit_against_collected_amount"/>
                 </tree>
             </field>
         </record>
@@ -119,15 +119,62 @@
         </record>
 
         <record id="sale_order_search_inherit" model="ir.ui.view">
-    <field name="name">sale.order.search.inherit</field>
-    <field name="model">sale.order</field>
-    <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-    <field name="arch" type="xml">
-        <xpath expr="//field[@name='partner_id']" position="after">
-            <field name="partner_mobile" string="Mobile"/>
-        </xpath>
-    </field>
-</record>
+            <field name="name">sale.order.search.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner_mobile" string="Mobile"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <template id="report_no_forecast1">
+            <t t-call="web.html_container">
+    <t t-foreach="docs" t-as="doc">
+        <t t-set="data" t-value="doc.get_no_forecast_products()"/>
+        <t t-if="data">
+            <div class="page">
+                <h2>Products with No Forecasted Quantity</h2>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Variant Name</th>
+                            <th>Forecasted Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="data" t-as="line">
+                            <tr>
+                                <td>
+                                    <t t-esc="line.get('product_name')"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line.get('variant_name')"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line.get('forecast_qty')"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</t>
+        </template>
+
+
+        <record id="action_report_no_forecast1" model="ir.actions.report">
+            <field name="name">product details</field>
+            <field name="model">product.template</field>
+            <field name="report_name">reporting.report_no_forecast1</field>
+            <field name="report_file">reporting.report_no_forecast1</field>
+            <field name="report_type">qweb-pdf</field>
+        </record>
 
 
     </data>
