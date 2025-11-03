@@ -110,7 +110,7 @@ class SaleOrder(models.Model):
                         'auto_delete': True,
                     }
                     self.env['mail.mail'].sudo().create(mail_values).send()
-        elif 'call_detail' in vals and vals['call_detail'] == 'confirm':
+        elif 'call_detail' in vals and vals['call_detail'] == 'confirm' or 'auto':
             if self.payment_type == 'Pre_paid':
                 payment = self.env['payment.transaction'].search(
                     [('sale_order_ids', 'in', self.ids), ('state', '=', 'done')])
