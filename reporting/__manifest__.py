@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','sale','account','base_accounting_kit','product'],
+    'depends': ['base','sale','account','base_accounting_kit','product','gts_delhivery_integration'],
 
     # always loaded
     'data': [

@@ -30,14 +30,14 @@
             </t>
         </template>
 
-        <report
-                id="report_sale_slips_tag"
-                model="sale.order"
-                string="Packing Slips"
-                name="reporting.report_sale_slips"
-                file="reporting.report_sale_slips"
-                report_type="qweb-pdf"
-        />
+
+     <record id="report_sale_slips_tag" model="ir.actions.report">
+            <field name="name">Packing Slips</field>
+            <field name="model">sale.order</field>
+            <field name="report_name">reporting.report_sale_slips</field>
+            <field name="report_file">reporting.report_sale_slips</field>
+            <field name="report_type">qweb-pdf</field>
+        </record>
 
 <record id="paperformat_dtdc_slip_nopadding" model="report.paperformat">
     <field name="name">DTDC No Header/Footer</field>
@@ -87,7 +87,7 @@
                     <strong>Customer:</strong> <t t-esc="doc.partner_shipping_id.name"/><br/>
                     <strong>Address:</strong> <t t-esc="doc.partner_shipping_id.contact_address"/><br/>
                     <strong>Phone:</strong> <t t-esc="doc.partner_shipping_id.phone"/>
-                    <strong>or:</strong> <t t-esc="doc.partner_shipping_id.modile"/>
+                    <strong>or:</strong> <t t-esc="doc.partner_shipping_id.mobile"/>
                 </p>
 
                 <!-- Product Table -->
@@ -120,15 +120,25 @@
 </template>
 
 
-        <report
-                id="report_dtdc_order"
-                model="sale.order"
-                string="DTDC SLIP"
-                name="reporting.report_dtdc_slips"
-                file="reporting.report_dtdc_slips"
-                report_type="qweb-pdf"
-                paperformat="paperformat_dtdc_slip_nopadding"
-        />
+
+
+    <record id="report_dtdc_order" model="ir.actions.report">
+            <field name="name">DTDC SLIP</field>
+            <field name="model">sale.order</field>
+            <field name="report_name">reporting.report_dtdc_slips</field>
+            <field name="report_file">reporting.report_dtdc_slips</field>
+            <field name="paperformat_id" ref="reporting.paperformat_dtdc_slip_nopadding"/>
+            <field name="report_type">qweb-pdf</field>
+        </record>
+
+     <record id="action_check_call_detail" model="ir.actions.server">
+        <field name="name">Check Call Detail</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="state">code</field>
+        <field name="binding_type">action</field>
+        <field name="code">records.action_check_call_detail()</field>
+    </record>
 
 
 </odoo>

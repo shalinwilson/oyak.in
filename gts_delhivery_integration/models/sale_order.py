@@ -132,6 +132,7 @@ class SaleOrder(models.Model):
         selection=[('confirm', 'Confirmed'),
                    ('not_connected', 'Not Connected'),
                    ('cancel', 'Cancel'),
+                   ('auto', 'Auto Confirm'),
                    ],
         required=False, tracking=True)
 

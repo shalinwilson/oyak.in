@@ -5,6 +5,25 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     partner_mobile = fields.Char(related="partner_id.phone",store=True)
+    
+#     automation for confirmation
+    def action_check_call_detail(self):
+        for order in self:
+            # Skip if no mobile number
+            if not order.partner_mobile:
+                continue
+
+            # Search for other sale orders with same mobile that are already confirmed
+            existing_order = self.search([
+                ('id', '!=', order.id),
+                ('partner_mobile', '=', order.partner_mobile),
+                ('state', '=', 'sale'),
+                ('call_detail', '=', 'confirm'),
+            ], limit=1)
+
+            # If such order exists, update call_detail
+            if existing_order:
+                order.call_detail = 'auto'
 
 class SaleOrderReport(models.AbstractModel):
     _name = 'report.reporting.report_sale_slips'
