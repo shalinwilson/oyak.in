@@ -49,15 +49,13 @@ class SaleOrder(models.Model):
     def make_delhivery_order(self):
         if len(self.picking_ids) == 1:
             # all_child = self.env["res.partner"].with_context(active_test=False).search([('id', 'child_of', self.partner_id.ids)])
-            so = self.env["sale.order"].search(
-                [("partner_id", "in", self.partner_id.ids), ('tracking_number', '!=', False)])
 
-            so_count = len(so.filtered(lambda x: x.state == 'sale'))
-            if so_count <= 2:
-                try:
-                    self.picking_ids.create_delhivery_order()
-                except:
-                    pass
+
+            try:
+                self.picking_ids.create_delhivery_order()
+                self.call_detail = 'auto'
+            except:
+                pass
 
     def return_delivery(self):
         print("wprkig")
