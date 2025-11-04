@@ -110,12 +110,12 @@ class SaleOrder(models.Model):
                         'auto_delete': True,
                     }
                     self.env['mail.mail'].sudo().create(mail_values).send()
-        elif 'call_detail' in vals and vals['call_detail'] == 'confirm' or 'auto':
+        elif 'call_detail' in vals and (vals['call_detail'] in ['confirm', 'auto']):
             if self.payment_type == 'Pre_paid':
                 payment = self.env['payment.transaction'].search(
                     [('sale_order_ids', 'in', self.ids), ('state', '=', 'done')])
                 if not payment and self.cod_collected < 1:
-                    raise UserError(_('Check if they have made the payment'))
+                    raise UserError(_('Check if they have made the payment'+str(self)))
 
         return res
 
@@ -131,6 +131,7 @@ class SaleOrder(models.Model):
                    ('not_connected', 'Not Connected'),
                    ('cancel', 'Cancel'),
                    ('auto', 'Auto Confirm'),
+                   ('waauto', 'WA Auto Confirm'),
                    ],
         required=False, tracking=True)
 

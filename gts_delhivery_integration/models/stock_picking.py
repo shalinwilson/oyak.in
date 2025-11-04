@@ -306,7 +306,18 @@ class StockPicking(models.Model):
             })
             if so:
                 so.slip_generation_date = fields.Date.today()
+
+
+                tracking_url = "https://www.delhivery.com/track-v2/package/" + key.get('waybill')
+                if key.get('waybill'):
+                    text = "Your order has been shipped! 🚚 Track here:" + tracking_url + " You can track your package using this number. Thank you for shopping with OYAK."
+                else:
+                    text = "We will manually ship it and inform you details over mail and whatsapp"
+                so.send_whatsapp_reply(text)
+
+
             success = True
+
             # self.env.user.notify_danger(message='Hi %s, \n \n We are happy to inform you that your order is ready, shipped, and on its way to you! You know what this means- you will soon own an original, unique, and handcrafted product, made with love by the women of Shilpgram \n \n Your order will be delivered by our logistics partner Delhivery. You can track your shipment [link] with tracking No: %s \n \n If you have any questions for us, just hit reply and our team will be happy to help you.' % (self.partner_id.name, key.get('waybill')))
             # notification = _('Hi %s, \n \n We are happy to inform you that your order is ready, shipped, and on its way to you! You know what this means- you will soon own an original, unique, and handcrafted product, made with love by the women of Shilpgram \n \n Your order will be delivered by our logistics partner Delhivery. You can track your shipment [link] with tracking No: %s \n \n If you have any questions for us, just hit reply and our team will be happy to help you.' % (self.partner_id.name, key.get('waybill')))
             subject = 'Your OYAK order is %s on its way to you!' % (self.origin)
@@ -320,7 +331,7 @@ class StockPicking(models.Model):
                 Hi %s,<br/><br/>
                 We are happy to inform you that your order is ready, shipped, and on its way to you! You know what this means- you will soon own an original, unique, OYAK product, made with love by Team OYAK
                 <br/><br/>
-                You can track your shipment with tracking No: %s 
+                You can track your shipment with tracking No: https://www.delhivery.com/track-v2/package/%s 
                 <br/><br/>
                 If you have any questions for us, just hit reply and our team will be happy to help you.
                 <br/><br/>
