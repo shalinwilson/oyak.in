@@ -123,6 +123,8 @@ class StockPicking(models.Model):
         return self.env.ref('gts_delhivery_integration.report_waybill_slip').report_action(self)
 
     def create_delhivery_order(self):
+        if self.waybill:
+            return
         data = self.env['sale.order'].search([('name', '=', self.origin)], limit=1)
         if not data:
             so_num = self.origin.split('-', 1)
