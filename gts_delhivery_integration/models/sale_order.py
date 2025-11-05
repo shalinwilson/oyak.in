@@ -53,7 +53,8 @@ class SaleOrder(models.Model):
 
             try:
                 self.picking_ids.create_delhivery_order()
-                self.call_detail = 'auto'
+                if self.call_detail != 'waauto':
+                    self.call_detail = 'auto'
             except:
                 pass
 
