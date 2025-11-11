@@ -1,6 +1,9 @@
 from odoo import models, fields, api
 from collections import defaultdict
 from datetime import datetime, timedelta
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -42,16 +45,8 @@ class SaleOrder(models.Model):
         ], limit=batch_size)
 
         if attachments:
-            # log count for monitoring
-            _logger = self.env['ir.logging']
-            self.env.cr.execute("""
-                    INSERT INTO ir_logging(create_date, name, level, message, path, func, line, type, dbuuid)
-                    VALUES (NOW(), 'Attachment Cleanup', 'INFO', %s, 'sale_order_attachment_cleanup', 'cron_delete_old_attachments', 0, 'server', %s)
-                """, (f"Deleting {len(attachments)} old attachments", self.env.cr.dbname))
-
-            # Delete attachments
             attachments.unlink()
-
+            _logger.info(f"deleted ============: {attachments}")
         return True
 
 class SaleOrderReport(models.AbstractModel):
