@@ -110,6 +110,9 @@ class WhatsAppWebhookController(http.Controller):
                     elif text == "Cancel":
                         _logger.info("✅ Customer initiated cancel")
                         order.call_detail = 'cancel'
+                        if order.payment_type == 'cod':
+                            if not order.tracking_number:
+                                order.action_cancel()
                         text = "We will be cancelling it if its a COD order, If its paid we will call and confirm Cancel and refund"
                         order.send_whatsapp_reply(text)
                 else:
