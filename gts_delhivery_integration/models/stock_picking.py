@@ -124,6 +124,9 @@ class StockPicking(models.Model):
 
     def create_delhivery_order(self):
         if self.waybill:
+            tracking_url = "https://www.delhivery.com/track-v2/package/" + self.waybill
+            text = "Your order has been shipped! 🚚 Track here:" + tracking_url + " You can track your package using this number. Thank you for shopping with OYAK."
+            self.send_whatsapp_reply(text)
             return
         data = self.env['sale.order'].search([('name', '=', self.origin)], limit=1)
         if not data:

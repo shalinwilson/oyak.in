@@ -1,0 +1,17 @@
+<odoo>
+    <template id="portal_my_details_oyak" inherit_id="portal.portal_layout">
+
+        <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
+            <div class="mt-3">
+                <label>
+                    <strong>Your OYAK ID</strong>
+                </label>
+                <div class="form-control" readonly="readonly">
+
+                    <t t-esc="str(request.env.user.partner_id.id)"/>
+                </div>
+            </div>
+        </xpath>
+
+    </template>
+</odoo>
