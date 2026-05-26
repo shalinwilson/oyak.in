@@ -132,13 +132,60 @@ class SaleOrder(models.Model):
                 "Authorization": f"Bearer {access_token}",
                 "Content-Type": "application/json"
             }
-            payload = {
-                "messaging_product": "whatsapp",
-                "to": order.get_whatsapp_number(),
-                "context": {"message_id": order.whatsapp_message_id},  # Reply in same thread
-                "type": "text",
-                "text": {"body": text}
-            }
+            #Todo if not wa auto confirm, use new template
+            if order.call_detail != 'waauto':
+                tracking_url = self.tracking_number
+                payload = {
+                    "messaging_product": "whatsapp",
+                    "to": order.get_whatsapp_number(),
+                    "type": "template",
+                    "template": {
+                        "name": "tracking_details",  # template name in Meta
+                        "language": {"code": "en"},
+                        "components": [
+                            {
+                                "type": "body",
+                                "parameters": [
+                                    {
+                                        "type": "text",
+                                        "parameter_name": "1",
+                                        "text": order.partner_id.name
+                                    },
+                                    {
+                                        "type": "text",
+                                        "parameter_name": "2",
+                                        "text": order.name
+                                    },
+
+                                ]
+
+
+                            },
+                            {
+                                "type": "button",
+                                "sub_type": "url",
+                                "index": "0",
+                                "parameters": [
+                                    {
+                                        "type": "text",
+                                        "text": tracking_url  # 👈 THIS IS {{1}}
+                                    }
+                                ]
+                            }
+                        ]
+
+                    }
+
+
+                }
+            else:
+                payload = {
+                    "messaging_product": "whatsapp",
+                    "to": order.get_whatsapp_number(),
+                    "context": {"message_id": order.whatsapp_message_id},  # Reply in same thread
+                    "type": "text",
+                    "text": {"body": text}
+                }
 
             response = requests.post(url, headers=headers, json=payload)
             order.message_post(

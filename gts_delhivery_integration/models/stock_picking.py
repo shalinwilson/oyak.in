@@ -123,11 +123,6 @@ class StockPicking(models.Model):
         return self.env.ref('gts_delhivery_integration.report_waybill_slip').report_action(self)
 
     def create_delhivery_order(self):
-        if self.waybill:
-            tracking_url = "https://www.delhivery.com/track-v2/package/" + self.waybill
-            text = "Your order has been shipped! 🚚 Track here:" + tracking_url + " You can track your package using this number. Thank you for shopping with OYAK."
-            self.send_whatsapp_reply(text)
-            return
         data = self.env['sale.order'].search([('name', '=', self.origin)], limit=1)
         if not data:
             so_num = self.origin.split('-', 1)
@@ -136,6 +131,12 @@ class StockPicking(models.Model):
 
         total_amount = data.amount_total
         so = data
+        if self.waybill:
+            tracking_url = "https://www.delhivery.com/track-v2/package/" + self.waybill
+            text = "Your order has been shipped! 🚚 Track here:" + tracking_url + " You can track your package using this number. Thank you for shopping with OYAK."
+            so.send_whatsapp_reply(text)
+            return
+
         warehouse = self.picking_type_id.warehouse_id
         self.cancelled = False
         # function for register order with Delhivery
