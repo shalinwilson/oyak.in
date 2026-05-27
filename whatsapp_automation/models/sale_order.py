@@ -148,12 +148,12 @@ class SaleOrder(models.Model):
                                 "parameters": [
                                     {
                                         "type": "text",
-                                        "parameter_name": "1",
+                                        "parameter_name": "customer_name",
                                         "text": order.partner_id.name
                                     },
                                     {
                                         "type": "text",
-                                        "parameter_name": "2",
+                                        "parameter_name": "order_id",
                                         "text": order.name
                                     },
 
