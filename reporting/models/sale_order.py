@@ -74,3 +74,174 @@ class SaleOrderReport(models.AbstractModel):
             'docs': sale_orders,
             'consolidated_data': consolidated_data
         }
+
+class OyakInventoryReportWizard(models.TransientModel):
+    _name = 'oyak.inventory.report.wizard'
+    _description = 'Oyak Inventory Report Wizard'
+
+    weekly_top_products = fields.Boolean(
+        string="Weekly Top 20 Products"
+    )
+
+    fast_moving_products = fields.Boolean(
+        string="Fast Moving Products"
+    )
+
+    restock_priority = fields.Boolean(
+        string="Restock Priority"
+    )
+
+    dead_stock = fields.Boolean(
+        string="Dead Stock"
+    )
+
+    # common date range
+    date_from = fields.Date(
+        string="From Date"
+    )
+
+    date_to = fields.Date(
+        string="To Date"
+    )
+
+    lookback_days = fields.Integer(
+        string="Lookback Days",
+        default=30
+    )
+
+    minimum_stock_days = fields.Integer(
+        string="Minimum Stock Days",
+        default=15
+    )
+
+    dead_stock_days = fields.Integer(
+        string="No Sales Since (Days)",
+        default=60
+    )
+    def _get_top_products(self):
+        top_products_by_qty = self.env['sale.order.line'].read_group(
+            domain=[
+                ('order_id.state', 'in', ['sale', 'done']),
+                ('order_id.date_order', '>=', self.date_from),
+                ('order_id.date_order', '<=', self.date_to),
+                ('product_id.detailed_type', '=', 'product'),
+            ],
+            fields=[
+                'product_id',
+                'product_uom_qty:sum',
+            ],
+            groupby=[
+                'product_id',
+            ],
+            orderby='product_uom_qty desc',
+            limit=20,
+        )
+        qty_data = []
+
+        for row in top_products_by_qty:
+            qty_data.append({
+                'product_name': row['product_id'][1],
+                'qty_sold': row['product_uom_qty'],
+                'orders': row['product_id_count'],
+            })
+        top_products_by_revenue = self.env['sale.order.line'].read_group(
+            domain=[
+                ('order_id.state', 'in', ['sale', 'done']),
+                ('order_id.date_order', '>=', self.date_from),
+                ('order_id.date_order', '<=', self.date_to),
+                ('product_id.detailed_type', '=', 'product'),
+            ],
+            fields=[
+                'product_id',
+                'price_subtotal:sum',
+            ],
+            groupby=[
+                'product_id',
+            ],
+            orderby='price_subtotal desc',
+            limit=20,
+        )
+        revenue_data = []
+
+        for row in top_products_by_revenue:
+            revenue_data.append({
+                'product_name': row['product_id'][1],
+                'revenue': row['price_subtotal'],
+                'orders': row['product_id_count'],
+            })
+        return {
+            'by_qty': qty_data,
+            'by_revenue': revenue_data,
+        }
+    def _get_fast_moving_products(self):
+        days = (
+                       self.date_to - self.date_from
+               ).days + 1
+
+        sales = self.env['sale.order.line'].read_group(
+            domain=[
+                ('order_id.state', 'in', ['sale', 'done']),
+                ('order_id.date_order', '>=', self.date_from),
+                ('order_id.date_order', '<=', self.date_to),
+            ],
+            fields=[
+                'product_id',
+                'product_uom_qty:sum',
+            ],
+            groupby=['product_id'],
+        )
+
+        results = []
+
+        for row in sales:
+            product_id = row['product_id'][0]
+
+            product = self.env['product.product'].browse(product_id)
+
+            qty_sold = row['product_uom_qty']
+
+            velocity = qty_sold / days
+
+            results.append({
+                'product_name': product.display_name,
+                'qty_sold': qty_sold,
+                'velocity': round(velocity, 2),
+                'stock': product.qty_available,
+            })
+
+        results.sort(
+            key=lambda x: x['velocity'],
+            reverse=True
+        )
+
+        return results[:20]
+
+
+
+
+    def action_generate_pdf(self):
+        data = {}
+
+        if self.weekly_top_products:
+            data['top_products'] = self._get_top_products()
+
+        if self.fast_moving_products:
+            data['fast_moving'] = self._get_fast_moving_products()
+
+        return self.env.ref(
+            'reporting.action_inventory_report'
+        ).report_action(self, data=data)
+
+class InventoryReport(models.AbstractModel):
+    _name = 'report.reporting.inventory_report_template'
+
+    def _get_report_values(self, docids, data=None):
+
+        return {
+            'doc_ids': docids,
+            'doc_model': 'oyak.inventory.report.wizard',
+            'docs': self.env[
+                'oyak.inventory.report.wizard'
+            ].browse(docids),
+            'data': data or {},
+        }

@@ -131,44 +131,44 @@
 
 
         <template id="report_no_forecast1">
-        <t t-call="web.html_container">
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Variant Name</th>
-                        <th>Forecasted Qty</th>
-                    </tr>
-                </thead>
-                <h2>Products with No Forecasted Quantity</h2>
-                <t t-foreach="docs" t-as="doc">
+            <t t-call="web.html_container">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Variant Name</th>
+                            <th>Forecasted Qty</th>
+                        </tr>
+                    </thead>
+                    <h2>Products with No Forecasted Quantity</h2>
+                    <t t-foreach="docs" t-as="doc">
 
-                <t t-set="data" t-value="doc.get_no_forecast_products()"/>
-                <t t-if="data">
-                    <div class="page">
+                        <t t-set="data" t-value="doc.get_no_forecast_products()"/>
+                        <t t-if="data">
+                            <div class="page">
 
 
-                        <tbody>
-                            <t t-foreach="data" t-as="line">
-                                <tr>
-                                    <td>
-                                        <t t-esc="line.get('product_name')"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="line.get('variant_name')"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="line.get('forecast_qty')"/>
-                                    </td>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </div>
-                </t>
-                </t>
-            </table>
+                                <tbody>
+                                    <t t-foreach="data" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="line.get('product_name')"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line.get('variant_name')"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line.get('forecast_qty')"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </div>
+                        </t>
+                    </t>
+                </table>
 
-        </t>
+            </t>
         </template>
 
 
@@ -178,6 +178,194 @@
             <field name="report_name">reporting.report_no_forecast1</field>
             <field name="report_file">reporting.report_no_forecast1</field>
             <field name="report_type">qweb-pdf</field>
+        </record>
+
+        <record id="view_oyak_inventory_report_wizard" model="ir.ui.view">
+            <field name="name">
+                oyak.inventory.report.wizard.form
+            </field>
+            <field name="model">oyak.inventory.report.wizard</field>
+            <field name="arch" type="xml">
+
+                <form string="Inventory Reports">
+
+                    <sheet>
+
+                        <group col="2">
+
+                            <group string="Select Reports">
+                                <field name="weekly_top_products"/>
+                                <field name="fast_moving_products"/>
+                                <field name="restock_priority"/>
+                                <field name="dead_stock"/>
+                            </group>
+
+                            <group string="Date Range">
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                            </group>
+
+                        </group>
+
+                        <separator string="Report Settings"/>
+
+                        <group col="2">
+
+                            <group string="Restock Settings"
+                                   attrs="{'invisible': [('restock_priority', '=', False)]}">
+                                <field name="lookback_days"/>
+                                <field name="minimum_stock_days"/>
+                            </group>
+
+                            <group string="Dead Stock Settings"
+                                   attrs="{'invisible': [('dead_stock', '=', False)]}">
+                                <field name="dead_stock_days"/>
+                            </group>
+
+                        </group>
+
+                    </sheet>
+
+                    <footer>
+
+                        <button
+                                name="action_generate_pdf"
+                                string="Generate PDF"
+                                type="object"
+                                class="btn-primary"
+                        />
+
+                        <button
+                                string="Cancel"
+                                special="cancel"
+                        />
+
+                    </footer>
+
+                </form>
+
+            </field>
+        </record>
+        <record id="action_oyak_inventory_report_wizard" model="ir.actions.act_window">
+            <field name="name">Inventory Reports</field>
+            <field name="res_model">oyak.inventory.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+                id="menu_oyak_inventory_reports"
+                name="Inventory Reports"
+                parent="website_sale.menu_ecommerce_settings"
+                action="action_oyak_inventory_report_wizard"
+                sequence="10"
+        />
+
+        <!--        inventory report template-->
+
+        <template id="inventory_report_template">
+
+            <t t-call="web.html_container">
+
+                <t t-call="web.external_layout">
+
+                    <div class="page">
+                        <h1>OYAK INVENTORY REPORT</h1>
+
+                        <p>
+                            Period:
+                            <t t-esc="docs.date_from"/>
+                            -
+                            <t t-esc="docs.date_to"/>
+                        </p>
+                        <h2>Top Products By Revenue</h2>
+
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                    <th>Revenue</th>
+                                    <th>Orders</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <t t-set="rank" t-value="1"/>
+
+                                <t t-foreach="data['top_products']['by_qty']"
+                                   t-as="line">
+
+                                    <tr>
+                                        <td>
+                                            <t t-esc="rank"/>
+                                        </td>
+
+                                        <td>
+                                            <t t-esc="line['product_name']"/>
+                                        </td>
+
+                                        <td>
+                                            ₹
+                                            <t t-esc="'{:,.2f}'.format(line['revenue'])"/>
+                                        </td>
+
+                                        <td>
+                                            <t t-esc="line['orders']"/>
+                                        </td>
+                                    </tr>
+
+                                    <t t-set="rank" t-value="rank + 1"/>
+
+                                </t>
+
+                            </tbody>
+
+                        </table>
+
+
+                        <!--                        <t t-foreach="data['top_products']['by_qty']" t-as="line">-->
+
+                        <!--                            <tr>-->
+                        <!--                                <td>-->
+                        <!--                                    <t t-esc="line['product_name']"/>-->
+                        <!--                                </td>-->
+
+                        <!--                                <td>-->
+                        <!--                                    <t t-esc="line['qty_sold']"/>-->
+                        <!--                                </td>-->
+
+                        <!--                            </tr>-->
+
+                        <!--                        </t>-->
+                        <!--                        <t t-foreach="top_products['by_revenue']" t-as="line">-->
+
+                        <!--                            <tr>-->
+                        <!--                                <td>-->
+                        <!--                                    <t t-esc="line['product_name']"/>-->
+                        <!--                                </td>-->
+
+                        <!--                                <td>-->
+                        <!--                                    <t t-esc="line['qty_sold']"/>-->
+                        <!--                                </td>-->
+
+                        <!--                            </tr>-->
+
+                        <!--                        </t>-->
+                    </div>
+
+                </t>
+
+            </t>
+
+        </template>
+        <record id="action_inventory_report" model="ir.actions.report">
+            <field name="name">Inventory Report</field>
+            <field name="model">oyak.inventory.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">reporting.inventory_report_template</field>
+            <field name="report_file">reporting.inventory_report_template</field>
         </record>
 
 
