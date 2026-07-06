@@ -285,7 +285,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Product</th>
-                                    <th>Revenue</th>
+                                    <th>qty</th>
                                     <th>Orders</th>
                                 </tr>
                             </thead>
@@ -295,6 +295,53 @@
                                 <t t-set="rank" t-value="1"/>
 
                                 <t t-foreach="data['top_products']['by_qty']"
+                                   t-as="line">
+
+                                    <tr>
+                                        <td>
+                                            <t t-esc="rank"/>
+                                        </td>
+
+                                        <td>
+                                            <t t-esc="line['product_name']"/>
+                                        </td>
+
+                                        <td>
+                                            ₹
+                                            <t t-esc="'{:,.2f}'.format(line['qty_sold'])"/>
+                                        </td>
+
+                                        <td>
+                                            <t t-esc="line['orders']"/>
+                                        </td>
+                                    </tr>
+
+                                    <t t-set="rank" t-value="rank + 1"/>
+
+                                </t>
+
+                            </tbody>
+
+                        </table>
+
+
+                        <h2>Top Products By Revenue</h2>
+
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                    <th>Revenue</th>
+                                    <th>Orders</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <t t-set="rank" t-value="1"/>
+
+                                <t t-foreach="data['top_products']['by_revenue']"
                                    t-as="line">
 
                                     <tr>
@@ -321,38 +368,7 @@
                                 </t>
 
                             </tbody>
-
                         </table>
-
-
-                        <!--                        <t t-foreach="data['top_products']['by_qty']" t-as="line">-->
-
-                        <!--                            <tr>-->
-                        <!--                                <td>-->
-                        <!--                                    <t t-esc="line['product_name']"/>-->
-                        <!--                                </td>-->
-
-                        <!--                                <td>-->
-                        <!--                                    <t t-esc="line['qty_sold']"/>-->
-                        <!--                                </td>-->
-
-                        <!--                            </tr>-->
-
-                        <!--                        </t>-->
-                        <!--                        <t t-foreach="top_products['by_revenue']" t-as="line">-->
-
-                        <!--                            <tr>-->
-                        <!--                                <td>-->
-                        <!--                                    <t t-esc="line['product_name']"/>-->
-                        <!--                                </td>-->
-
-                        <!--                                <td>-->
-                        <!--                                    <t t-esc="line['qty_sold']"/>-->
-                        <!--                                </td>-->
-
-                        <!--                            </tr>-->
-
-                        <!--                        </t>-->
                     </div>
 
                 </t>
