@@ -118,14 +118,20 @@ class OyakInventoryReportWizard(models.TransientModel):
         string="No Sales Since (Days)",
         default=60
     )
+
     def _get_top_products(self):
-        top_products_by_qty = self.env['sale.order.line'].read_group(
-            domain=[
-                ('order_id.state', 'in', ['sale', 'done']),
-                ('order_id.date_order', '>=', self.date_from),
-                ('order_id.date_order', '<=', self.date_to),
-                ('product_id.detailed_type', '=', 'product'),
-            ],
+        domain = [
+            ('order_id.state', 'in', ['sale', 'done']),
+            ('order_id.date_order', '>=', self.date_from),
+            ('order_id.date_order', '<=', self.date_to),
+            ('product_id.detailed_type', '=', 'product'),
+        ]
+
+        # -----------------------------
+        # Top Products by Quantity
+        # -----------------------------
+        qty_result = self.env['sale.order.line'].read_group(
+            domain=domain,
             fields=[
                 'product_id',
                 'product_uom_qty:sum',
@@ -133,24 +139,37 @@ class OyakInventoryReportWizard(models.TransientModel):
             groupby=[
                 'product_id',
             ],
-            orderby='product_uom_qty desc',
-            limit=20,
+            lazy=False,
         )
-        qty_data = []
 
-        for row in top_products_by_qty:
-            qty_data.append({
-                'product_name': row['product_id'][1],
-                'qty_sold': row['product_uom_qty'],
-                'orders': row['product_id_count'],
-            })
-        top_products_by_revenue = self.env['sale.order.line'].read_group(
-            domain=[
-                ('order_id.state', 'in', ['sale', 'done']),
-                ('order_id.date_order', '>=', self.date_from),
-                ('order_id.date_order', '<=', self.date_to),
-                ('product_id.detailed_type', '=', 'product'),
-            ],
+        qty_products = {}
+
+        for row in qty_result:
+            product = self.env['product.product'].browse(row['product_id'][0])
+            tmpl = product.product_tmpl_id
+
+            if tmpl.id not in qty_products:
+                qty_products[tmpl.id] = {
+                    'product_tmpl_id': tmpl.id,
+                    'product_name': tmpl.name,
+                    'qty_sold': 0,
+                    'orders': 0,
+                }
+
+            qty_products[tmpl.id]['qty_sold'] += row['product_uom_qty']
+            qty_products[tmpl.id]['orders'] += row.get('__count', 0)
+
+        qty_data = sorted(
+            qty_products.values(),
+            key=lambda x: x['qty_sold'],
+            reverse=True
+        )[:20]
+
+        # -----------------------------
+        # Top Products by Revenue
+        # -----------------------------
+        revenue_result = self.env['sale.order.line'].read_group(
+            domain=domain,
             fields=[
                 'product_id',
                 'price_subtotal:sum',
@@ -158,17 +177,32 @@ class OyakInventoryReportWizard(models.TransientModel):
             groupby=[
                 'product_id',
             ],
-            orderby='price_subtotal desc',
-            limit=20,
+            lazy=False,
         )
-        revenue_data = []
 
-        for row in top_products_by_revenue:
-            revenue_data.append({
-                'product_name': row['product_id'][1],
-                'revenue': row['price_subtotal'],
-                'orders': row['product_id_count'],
-            })
+        revenue_products = {}
+
+        for row in revenue_result:
+            product = self.env['product.product'].browse(row['product_id'][0])
+            tmpl = product.product_tmpl_id
+
+            if tmpl.id not in revenue_products:
+                revenue_products[tmpl.id] = {
+                    'product_tmpl_id': tmpl.id,
+                    'product_name': tmpl.name,
+                    'revenue': 0.0,
+                    'orders': 0,
+                }
+
+            revenue_products[tmpl.id]['revenue'] += row['price_subtotal']
+            revenue_products[tmpl.id]['orders'] += row.get('__count', 0)
+
+        revenue_data = sorted(
+            revenue_products.values(),
+            key=lambda x: x['revenue'],
+            reverse=True
+        )[:20]
+
         return {
             'by_qty': qty_data,
             'by_revenue': revenue_data,

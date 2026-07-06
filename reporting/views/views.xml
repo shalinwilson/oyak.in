@@ -269,7 +269,7 @@
 
                 <t t-call="web.external_layout">
 
-                    <div class="page">
+                    <div class="page" style="font-size:12px;">
                         <h1>OYAK INVENTORY REPORT</h1>
 
                         <p>
@@ -278,40 +278,38 @@
                             -
                             <t t-esc="docs.date_to"/>
                         </p>
-                        <h2>Top Products By Revenue</h2>
+                        <h2>Top Products By Quantity</h2>
 
-                        <table class="table table-sm table-bordered">
+                        <table class="table table-sm table-bordered" style="width:100%;">
                             <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Product</th>
-                                    <th>qty</th>
-                                    <th>Orders</th>
-                                </tr>
+                                <tr style="background:#EAEAEA;">
+            <th style="width:8%; text-align:center;">#</th>
+            <th style="width:62%;">Product</th>
+            <th style="width:15%; text-align:right;">Qty Sold</th>
+            <th style="width:15%; text-align:right;">Orders</th>
+        </tr>
                             </thead>
 
                             <tbody>
 
                                 <t t-set="rank" t-value="1"/>
 
-                                <t t-foreach="data['top_products']['by_qty']"
-                                   t-as="line">
+                                <t t-foreach="data['top_products']['by_qty']" t-as="line">
 
                                     <tr>
-                                        <td>
+                                        <td style="width:8%; text-align:center;">
                                             <t t-esc="rank"/>
                                         </td>
 
-                                        <td>
+                                        <td style="width:62%;">
                                             <t t-esc="line['product_name']"/>
                                         </td>
 
-                                        <td>
-                                            ₹
-                                            <t t-esc="'{:,.2f}'.format(line['qty_sold'])"/>
+                                        <td style="width:15%; text-align:right;">
+                                            <t t-esc="line['qty_sold']"/>
                                         </td>
 
-                                        <td>
+                                        <td style="width:15%; text-align:right;">
                                             <t t-esc="line['orders']"/>
                                         </td>
                                     </tr>
@@ -327,17 +325,17 @@
 
                         <h2>Top Products By Revenue</h2>
 
-                        <table class="table table-sm table-bordered">
+                        <table class="table table-sm table-bordered" style="width:100%;">
                             <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Product</th>
-                                    <th>Revenue</th>
-                                    <th>Orders</th>
-                                </tr>
+                                 <tr style="background:#EAEAEA;">
+            <th style="width:8%; text-align:center;">#</th>
+            <th style="width:62%;">Product</th>
+            <th style="width:15%; text-align:right;">Revenue</th>
+            <th style="width:15%; text-align:right;">Orders</th>
+        </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody >
 
                                 <t t-set="rank" t-value="1"/>
 
@@ -345,20 +343,20 @@
                                    t-as="line">
 
                                     <tr>
-                                        <td>
+                                        <td style="width:8%; text-align:center;">
                                             <t t-esc="rank"/>
                                         </td>
 
-                                        <td>
+                                        <td style="width:62%;">
                                             <t t-esc="line['product_name']"/>
                                         </td>
 
-                                        <td>
+                                        <td style="width:15%; text-align:right;">
                                             ₹
                                             <t t-esc="'{:,.2f}'.format(line['revenue'])"/>
                                         </td>
 
-                                        <td>
+                                        <td style="width:15%; text-align:right;">
                                             <t t-esc="line['orders']"/>
                                         </td>
                                     </tr>
