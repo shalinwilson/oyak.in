@@ -196,6 +196,7 @@
                             <group string="Select Reports">
                                 <field name="weekly_top_products"/>
                                 <field name="fast_moving_products"/>
+                                <field name="top_category"/>
                                 <field name="restock_priority"/>
                                 <field name="dead_stock"/>
                             </group>
@@ -213,7 +214,7 @@
 
                             <group string="Restock Settings"
                                    attrs="{'invisible': [('restock_priority', '=', False)]}">
-                                <field name="lookback_days"/>
+                                <!--                                <field name="lookback_days"/>-->
                                 <field name="minimum_stock_days"/>
                             </group>
 
@@ -278,95 +279,456 @@
                             -
                             <t t-esc="docs.date_to"/>
                         </p>
-                        <h2>Top Products By Quantity</h2>
+                        <t t-if="data.get('top_products')">
+                            <h2>Top Products By Quantity</h2>
 
-                        <table class="table table-sm table-bordered" style="width:100%;">
-                            <thead>
-                                <tr style="background:#EAEAEA;">
-            <th style="width:8%; text-align:center;">#</th>
-            <th style="width:62%;">Product</th>
-            <th style="width:15%; text-align:right;">Qty Sold</th>
-            <th style="width:15%; text-align:right;">Orders</th>
-        </tr>
-                            </thead>
+                            <table class="table table-sm table-bordered" style="width:100%;">
+                                <thead>
+                                    <tr style="background:#EAEAEA;">
+                                        <th style="width:8%; text-align:center;">#</th>
+                                        <th style="width:62%;">Product</th>
+                                        <th style="width:15%; text-align:right;">Qty Sold</th>
+                                        <th style="width:15%; text-align:right;">Orders</th>
+                                    </tr>
+                                </thead>
 
-                            <tbody>
+                                <tbody>
 
-                                <t t-set="rank" t-value="1"/>
+                                    <t t-set="rank" t-value="1"/>
 
-                                <t t-foreach="data['top_products']['by_qty']" t-as="line">
+                                    <t t-foreach="data['top_products']['by_qty']" t-as="line">
 
-                                    <tr>
-                                        <td style="width:8%; text-align:center;">
-                                            <t t-esc="rank"/>
-                                        </td>
+                                        <tr>
+                                            <td style="width:8%; text-align:center;">
+                                                <t t-esc="rank"/>
+                                            </td>
 
-                                        <td style="width:62%;">
-                                            <t t-esc="line['product_name']"/>
-                                        </td>
+                                            <td style="width:62%;">
+                                                <t t-esc="line['product_name']"/>
+                                            </td>
 
-                                        <td style="width:15%; text-align:right;">
-                                            <t t-esc="line['qty_sold']"/>
-                                        </td>
+                                            <td style="width:15%; text-align:right;">
+                                                <t t-esc="line['qty_sold']"/>
+                                            </td>
 
-                                        <td style="width:15%; text-align:right;">
-                                            <t t-esc="line['orders']"/>
-                                        </td>
+                                            <td style="width:15%; text-align:right;">
+                                                <t t-esc="line['orders']"/>
+                                            </td>
+                                        </tr>
+
+                                        <t t-set="rank" t-value="rank + 1"/>
+
+                                    </t>
+
+                                </tbody>
+
+                            </table>
+
+
+                            <h2>Top Products By Revenue</h2>
+
+                            <table class="table table-sm table-bordered" style="width:100%;">
+                                <thead>
+                                    <tr style="background:#EAEAEA;">
+                                        <th style="width:8%; text-align:center;">#</th>
+                                        <th style="width:62%;">Product</th>
+                                        <th style="width:15%; text-align:right;">Revenue</th>
+                                        <th style="width:15%; text-align:right;">Orders</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <t t-set="rank" t-value="1"/>
+
+                                    <t t-foreach="data['top_products']['by_revenue']"
+                                       t-as="line">
+
+                                        <tr>
+                                            <td style="width:8%; text-align:center;">
+                                                <t t-esc="rank"/>
+                                            </td>
+
+                                            <td style="width:62%;">
+                                                <t t-esc="line['product_name']"/>
+                                            </td>
+
+                                            <td style="width:15%; text-align:right;">
+                                                ₹
+                                                <t t-esc="'{:,.2f}'.format(line['revenue'])"/>
+                                            </td>
+
+                                            <td style="width:15%; text-align:right;">
+                                                <t t-esc="line['orders']"/>
+                                            </td>
+                                        </tr>
+
+                                        <t t-set="rank" t-value="rank + 1"/>
+
+                                    </t>
+
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-if="data.get('restock_priority') and data['restock_priority'].get('products')">
+
+                            <h2 style="margin-top:30px;margin-bottom:10px;">
+                                Restock Priority
+                            </h2>
+                            <h2>Restock Priority</h2>
+
+                            <p>
+                                <strong>Analysis Period:</strong>
+                                <t t-esc="data['restock_priority']['summary']['date_from']"/>
+                                →
+                                <t t-esc="data['restock_priority']['summary']['date_to']"/>
+                            </p>
+
+                            <p>
+                                <strong>Total Days:</strong>
+                                <t t-esc="data['restock_priority']['summary']['total_days']"/>
+                            </p>
+
+                            <p>
+                                <strong>Critical Threshold:</strong>
+                                <t t-esc="data['restock_priority']['summary']['critical_days']"/>
+                                Days
+                            </p>
+
+                            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+
+                                <thead>
+
+                                    <tr style="background-color:#EAEAEA;border:1px solid #000;">
+
+                                        <th style="padding:6px;text-align:center;width:5%;">
+                                            #
+                                        </th>
+
+                                        <th style="padding:6px;text-align:left;width:30%;">
+                                            Product
+                                        </th>
+
+                                        <th style="padding:6px;text-align:right;width:10%;">
+                                            Revenue
+                                        </th>
+
+                                        <th style="padding:6px;text-align:right;width:10%;">
+                                            Sold
+                                        </th>
+
+                                        <th style="padding:6px;text-align:right;width:12%;">
+                                            Avg / Day
+                                        </th>
+
+                                        <th style="padding:6px;text-align:right;width:10%;">
+                                            Stock
+                                        </th>
+
+                                        <th style="padding:6px;text-align:right;width:10%;">
+                                            Days Left
+                                        </th>
+
+                                        <th style="padding:6px;text-align:center;width:13%;">
+                                            Status
+                                        </th>
+
                                     </tr>
 
-                                    <t t-set="rank" t-value="rank + 1"/>
+                                </thead>
 
-                                </t>
+                                <tbody>
 
-                            </tbody>
+                                    <t t-set="rank" t-value="1"/>
 
-                        </table>
+                                    <t t-foreach="data['restock_priority']['products']" t-as="line">
 
+                                        <tr style="border-bottom:1px solid #DDD;">
 
-                        <h2>Top Products By Revenue</h2>
+                                            <td style="padding:6px;text-align:center;">
+                                                <t t-esc="rank"/>
+                                            </td>
 
-                        <table class="table table-sm table-bordered" style="width:100%;">
-                            <thead>
-                                 <tr style="background:#EAEAEA;">
-            <th style="width:8%; text-align:center;">#</th>
-            <th style="width:62%;">Product</th>
-            <th style="width:15%; text-align:right;">Revenue</th>
-            <th style="width:15%; text-align:right;">Orders</th>
-        </tr>
-                            </thead>
+                                            <td style="padding:6px;">
+                                                <strong>
+                                                    <t t-esc="line['product_name']"/>
+                                                </strong>
+                                            </td>
 
-                            <tbody >
+                                            <td style="padding:6px;text-align:right;">
+                                                ₹
+                                                <t t-esc="'{:,.2f}'.format(line['revenue'])"/>
+                                            </td>
 
-                                <t t-set="rank" t-value="1"/>
+                                            <td style="padding:6px;text-align:right;">
+                                                <t t-esc="line['qty_sold']"/>
+                                            </td>
 
-                                <t t-foreach="data['top_products']['by_revenue']"
-                                   t-as="line">
+                                            <td style="padding:6px;text-align:right;">
+                                                <t t-esc="line['avg_daily_sales']"/>
+                                            </td>
 
-                                    <tr>
-                                        <td style="width:8%; text-align:center;">
-                                            <t t-esc="rank"/>
-                                        </td>
+                                            <td style="padding:6px;text-align:right;">
+                                                <t t-esc="line['current_stock']"/>
+                                            </td>
 
-                                        <td style="width:62%;">
-                                            <t t-esc="line['product_name']"/>
-                                        </td>
+                                            <td style="padding:6px;text-align:right;">
+                                                <t t-esc="line['days_left']"/>
+                                            </td>
 
-                                        <td style="width:15%; text-align:right;">
-                                            ₹
-                                            <t t-esc="'{:,.2f}'.format(line['revenue'])"/>
-                                        </td>
+                                            <td style="padding:6px;text-align:center;">
 
-                                        <td style="width:15%; text-align:right;">
-                                            <t t-esc="line['orders']"/>
-                                        </td>
+                                                <span t-if="line['status'] == 'Critical'"
+                                                      style="color:#C00000;font-weight:bold;">
+                                                    🔴 Critical
+                                                </span>
+
+                                                <span t-elif="line['status'] == 'Restock Soon'"
+                                                      style="color:#E67E22;font-weight:bold;">
+                                                    🟠 Restock
+                                                </span>
+
+                                                <span t-else=""
+                                                      style="color:#228B22;font-weight:bold;">
+                                                    🟢 Healthy
+                                                </span>
+
+                                            </td>
+
+                                        </tr>
+
+                                        <t t-set="rank" t-value="rank + 1"/>
+
+                                    </t>
+
+                                </tbody>
+
+                            </table>
+                        </t>
+
+                        <!--                        deadstock-->
+                        <t t-if="data.get('dead_stock')">
+
+                            <div style="margin-top:30px;"/>
+
+                            <h2 style="margin-bottom:5px;">
+                                Dead Stock Report
+                            </h2>
+
+                            <table style="width:100%; border:none; margin-bottom:15px; font-size:12px;">
+                                <tr>
+                                    <td>
+                                        <strong>No Sales For :</strong>
+                                        <t t-esc="data['dead_stock']['summary']['dead_stock_days']"/>
+                                        Days
+                                    </td>
+
+                                    <td style="text-align:right;">
+                                        <strong>Total Products :</strong>
+                                        <t t-esc="data['dead_stock']['summary']['total_products']"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2" style="text-align:right;">
+                                        <strong>Total Dead Stock Value :</strong>
+                                        ₹
+                                        <t t-esc="'{:,.2f}'.format(data['dead_stock']['summary']['total_stock_value'])"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table style="width:100%; border-collapse:collapse; font-size:12px;">
+
+                                <thead>
+
+                                    <tr style="background:#E8E8E8; border:1px solid #444;">
+
+                                        <th style="width:5%; padding:6px; text-align:center;">
+                                            #
+                                        </th>
+
+                                        <th style="width:33%; padding:6px;">
+                                            Product
+                                        </th>
+
+                                        <th style="width:10%; padding:6px; text-align:right;">
+                                            Stock
+                                        </th>
+
+                                        <th style="width:10%; padding:6px; text-align:right;">
+                                            Cost
+                                        </th>
+
+                                        <th style="width:14%; padding:6px; text-align:right;">
+                                            Stock Value
+                                        </th>
+
+                                        <th style="width:14%; padding:6px; text-align:center;">
+                                            Last Sale
+                                        </th>
+
+                                        <th style="width:14%; padding:6px; text-align:right;">
+                                            Days
+                                        </th>
+
                                     </tr>
 
-                                    <t t-set="rank" t-value="rank + 1"/>
+                                </thead>
 
-                                </t>
+                                <tbody>
 
-                            </tbody>
-                        </table>
+                                    <t t-set="rank" t-value="1"/>
+
+                                    <t t-foreach="data['dead_stock']['products']"
+                                       t-as="line">
+
+                                        <tr style="border-bottom:1px solid #DDD;">
+
+                                            <td style="padding:6px; text-align:center;">
+                                                <t t-esc="rank"/>
+                                            </td>
+
+                                            <td style="padding:6px;">
+                                                <strong>
+                                                    <t t-esc="line['product_name']"/>
+                                                </strong>
+                                            </td>
+
+                                            <td style="padding:6px; text-align:right;">
+                                                <t t-esc="line['current_stock']"/>
+                                            </td>
+
+                                            <td style="padding:6px; text-align:right;">
+                                                ₹
+                                                <t t-esc="'{:,.2f}'.format(line['cost'])"/>
+                                            </td>
+
+                                            <td style="padding:6px; text-align:right;">
+                                                ₹
+                                                <t t-esc="'{:,.2f}'.format(line['stock_value'])"/>
+                                            </td>
+
+                                            <td style="padding:6px; text-align:center;">
+
+                                                <t t-if="line['last_sale_date']">
+                                                    <t t-esc="line['last_sale_date']"/>
+                                                </t>
+
+                                                <t t-else="">
+                                                    Never Sold
+                                                </t>
+
+                                            </td>
+
+                                            <td style="padding:6px; text-align:right;">
+
+                                                <t t-if="line['days_since_sale'] == 9999">
+                                                    Never
+                                                </t>
+
+                                                <t t-else="">
+                                                    <t t-esc="line['days_since_sale']"/>
+                                                </t>
+
+                                            </td>
+
+                                        </tr>
+
+                                        <t t-set="rank" t-value="rank + 1"/>
+
+                                    </t>
+
+                                </tbody>
+
+                            </table>
+
+                        </t>
+                        <t t-if="data.get('category_performance')">
+                            <h2>Category Performance</h2>
+
+                            <p>
+                                <strong>Analysis Period:</strong>
+                                <t t-esc="data['category_performance']['summary']['date_from']"/>
+                                →
+                                <t t-esc="data['category_performance']['summary']['date_to']"/>
+                            </p>
+
+                            <p>
+                                <strong>Total Revenue:</strong>
+                                ₹
+                                <t t-esc="'{:,.2f}'.format(data['category_performance']['summary']['total_revenue'])"/>
+                            </p>
+
+                            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+
+                                <thead>
+
+                                    <tr style="background:#EAEAEA;">
+
+                                        <th>#</th>
+                                        <th>Category</th>
+                                        <th>Revenue</th>
+                                        <th>Qty Sold</th>
+                                        <th>Orders</th>
+                                        <th>Avg Price</th>
+                                        <th>% Revenue</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    <t t-set="rank" t-value="1"/>
+
+                                    <t t-foreach="data['category_performance']['rows']"
+                                       t-as="line">
+
+                                        <tr>
+
+                                            <td>
+                                                <t t-esc="rank"/>
+                                            </td>
+
+                                            <td>
+                                                <t t-esc="line['category_name']"/>
+                                            </td>
+
+                                            <td style="text-align:right;">
+                                                ₹
+                                                <t t-esc="'{:,.2f}'.format(line['revenue'])"/>
+                                            </td>
+
+                                            <td style="text-align:right;">
+                                                <t t-esc="line['qty_sold']"/>
+                                            </td>
+
+                                            <td style="text-align:right;">
+                                                <t t-esc="line['orders']"/>
+                                            </td>
+
+                                            <td style="text-align:right;">
+                                                ₹
+                                                <t t-esc="'{:,.2f}'.format(line['avg_price'])"/>
+                                            </td>
+
+                                            <td style="text-align:right;">
+                                                <t t-esc="'{:.2f}%'.format(line['contribution'])"/>
+                                            </td>
+
+                                        </tr>
+
+                                        <t t-set="rank" t-value="rank + 1"/>
+
+                                    </t>
+
+                                </tbody>
+
+                            </table>
+                        </t>
+
+
                     </div>
 
                 </t>
