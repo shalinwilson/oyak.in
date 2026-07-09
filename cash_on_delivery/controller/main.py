@@ -39,7 +39,7 @@ class WebsiteSaleConfirmInherits(WebsiteSale):
 
             carrier = order.carrier_id
             allowed = request.env['payment.provider'].sudo().search([
-                ('state', '=', 'test'),
+                ('state', '=', 'enabled'),
             ])
 
             if carrier.is_cash_on_delivery:
