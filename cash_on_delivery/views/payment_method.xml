@@ -10,4 +10,19 @@
             </xpath>
         </field>
     </record>
+
+    <!-- Inherit Form View to Modify it -->
+    <record id="view_delivery_carrier_form_inherited" model="ir.ui.view">
+        <field name="name">delivery.carrier.inherit.cod</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='free_over']" position="after">
+                <field name="is_cash_on_delivery"/>
+                <!-- Add your fields or attributes here -->
+            </xpath>
+
+        </field>
+    </record>
 </odoo>

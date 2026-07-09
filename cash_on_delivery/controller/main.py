@@ -1,30 +1,7 @@
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from collections import defaultdict
-# from itertools import product as cartesian_product
-# import json
-# import logging
-# from datetime import datetime
-# from werkzeug.exceptions import Forbidden, NotFound
-# from werkzeug.urls import url_decode, url_encode, url_parse
-
 from odoo import fields, http, SUPERUSER_ID, tools, _
-# from odoo.fields import Command
 from odoo.http import request
-# from odoo.addons.base.models.ir_qweb_fields import nl2br
-# from odoo.addons.http_routing.models.ir_http import slug
-# from odoo.addons.payment import utils as payment_utils
-# from odoo.addons.payment.controllers import portal as payment_portal
-# from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
-# from odoo.addons.website.controllers.main import QueryURL
-# from odoo.addons.website.models.ir_http import sitemap_qs2dom
-# from odoo.exceptions import AccessError, MissingError, ValidationError
-# from odoo.addons.portal.controllers.portal import _build_url_w_params
-# from odoo.addons.website.controllers import main
-# from odoo.addons.website.controllers.form import WebsiteForm
-# from odoo.addons.sale.controllers import portal
-# from odoo.osv import expression
-# from odoo.tools import lazy
-# from odoo.tools.json import scriptsafe as json_scriptsafe
+from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
 
 class WebsiteSaleConfirmInherits(WebsiteSale):
 
@@ -39,3 +16,38 @@ class WebsiteSaleConfirmInherits(WebsiteSale):
         res = super(WebsiteSaleConfirmInherits, self).shop_payment_confirmation(**post)
 
         return res
+# todo controller for passing data of payment methods with carrier update for charges in default Odoo code
+
+    class WebsiteSaleDeliveryInherit(WebsiteSaleDelivery):
+
+        @http.route(
+            ['/shop/update_carrier'],
+            type='json',
+            auth='public',
+            methods=['POST'],
+            website=True,
+            csrf=False,
+        )
+        def update_eshop_carrier(self, **post):
+            # Execute Odoo's original logic
+            result = super().update_eshop_carrier(**post)
+
+            order = request.website.sale_get_order()
+
+            if not order:
+                return result
+
+            carrier = order.carrier_id
+            allowed = request.env['payment.provider'].sudo().search([
+                ('state', '=', 'test'),
+            ])
+
+            if carrier.is_cash_on_delivery:
+                allowed = allowed.filtered(lambda p: p.is_cash_on_delivery)
+            else:
+                allowed = allowed.filtered(lambda p: not p.is_cash_on_delivery)
+            print(allowed)
+            result.update({
+                'allowed_provider_ids': allowed.ids,
+            })
+            return result
